@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<!-- 	<Resource -->
+	<!-- 		name="SenacDS" auth="Container" type="javax.sql.DataSource" -->
+	<!-- 		maxTotal="10" maxIdle="10" maxWaitMillis="10000" -->
+	<!-- 		username="root" password="root"
+	driverClassName="com.mysql.cj.jdbc.Driver" -->
+	<!-- 		url="jdbc:mysql://localhost:3306/exemplos" -->
+	<!-- 	/> -->
+
+	<Resource
+		name="SenacDS" auth="Container" type="javax.sql.DataSource"
+		maxTotal="10" maxIdle="10" maxWaitMillis="10000"
+		username="root" password="2004"
+		driverClassName="com.mysql.cj.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/controle_vacinas"
+	/>
+
+	<!-- 	senha da sala "root" -->
+	<!-- 	senha do notebook "2004" -->
+
+</Context>
