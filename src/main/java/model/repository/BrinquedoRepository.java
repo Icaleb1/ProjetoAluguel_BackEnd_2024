@@ -114,7 +114,6 @@ public class BrinquedoRepository {
 		return brinquedo;
 	}
 
-
 	public ArrayList<Brinquedo> consultarTodos() {
 		ArrayList<Brinquedo> brinquedos = new ArrayList<>();
 		Connection conn = Banco.getConnection();
@@ -137,7 +136,7 @@ public class BrinquedoRepository {
 			}
 
 		} catch (SQLException erro){
-			System.out.println("Erro ao consultar todas as pessoas");
+			System.out.println("Erro ao consultar todos os brinquedos");
 			System.out.println("Erro: " + erro.getMessage());
 		} finally {
 			Banco.closeResultSet(resultado);
