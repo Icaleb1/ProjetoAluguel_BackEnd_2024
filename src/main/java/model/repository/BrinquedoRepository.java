@@ -72,7 +72,7 @@ public class BrinquedoRepository {
 			stmt.setInt(3, brinquedoEditado.getQuantEstoque());
 			stmt.setDouble(4, brinquedoEditado.getValorDiaria());
 			
-			stmt.setInt(7, brinquedoEditado.getId());
+			stmt.setInt(5, brinquedoEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar brinquedo");

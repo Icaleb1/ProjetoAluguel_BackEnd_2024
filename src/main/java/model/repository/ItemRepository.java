@@ -68,7 +68,7 @@ public class ItemRepository {
 			stmt.setInt(2, itemEditado.getBrinquedo().getId());
 			stmt.setBoolean(3, itemEditado.isAlugado());
 			
-			stmt.setInt(7, itemEditado.getId());
+			stmt.setInt(4, itemEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar item");

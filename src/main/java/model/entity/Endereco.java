@@ -3,6 +3,7 @@ package model.entity;
 public class Endereco {
 	
 	private int id;
+	private int idUsuario;
 	private int cep;
 	private String estado;
 	private String cidade;
@@ -17,10 +18,11 @@ public class Endereco {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Endereco(int id, int cep, String estado, String cidade, String bairro, String lote, int numero,
+	public Endereco(int id, int idUsuario, int cep, String estado, String cidade, String bairro, String lote, int numero,
 			String complemento, String referencia) {
 		super();
 		this.id = id;
+		this.idUsuario = idUsuario;
 		this.cep = cep;
 		this.estado = estado;
 		this.cidade = cidade;
@@ -101,6 +103,14 @@ public class Endereco {
 
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
+	}
+
+	public int getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 	
 	

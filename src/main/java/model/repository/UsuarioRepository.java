@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.entity.Endereco;
 import model.entity.Usuario;
 import model.entity.vacinacao.Pessoa;
 import model.repository.Banco;
@@ -19,9 +20,9 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 
 	@Override
 	public Usuario salvar(Usuario novoUsuario) {
-		String sql = " INSERT INTO pessoa (nome, cpf, sexo, id_pais, "
-				   + "		               data_nascimento, tipo) "
-				   + " VALUES(?, ?, ?, ?, ?, ?) ";
+		String sql = " INSERT INTO usuario (nome, email, senha, cpf, "
+				   + "		               telefone, adm, ativo) "
+				   + " VALUES(?, ?, ?, ?, ?, ?, ?) ";
 		Connection conexao = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		
@@ -31,12 +32,8 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 			stmt.setString(3, novoUsuario.getSenha());
 			stmt.setString(4, novoUsuario.getCpf());
 			stmt.setInt(6, novoUsuario.getTelefone());
-			stmt.setBoolean(7, novoUsuario.isAdministrador());
-			
-			Array arrayEnderecos = conexao.createArrayOf("VARCHAR", novoUsuario.getEnderecos().toArray());
-			stmt.setArray(8, arrayEnderecos);
-			
-			stmt.setBoolean(9, novoUsuario.isAtivo());
+			stmt.setBoolean(7, novoUsuario.isAdministrador());	
+			stmt.setBoolean(8, novoUsuario.isAtivo());
 			
 			stmt.execute();
 			ResultSet resultado = stmt.getGeneratedKeys();
@@ -56,7 +53,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean excluiu = false;
-		String query = "DELETE FROM pessoa WHERE id = " + id;
+		String query = "DELETE FROM usuario WHERE id = " + id;
 		try {
 			if(stmt.executeUpdate(query) == 1) {
 				excluiu = true;
@@ -74,9 +71,9 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	@Override
 	public boolean alterar(Usuario usuarioEditado) {
 		boolean alterou = false;
-		String query = " UPDATE exemplos.pessoa "
-				     + " SET nome=?, cpf=?, sexo=?, id_pais=? "
-				     + " data_nascimento=?, tipo=? "
+		String query = " UPDATE db_camax.usuario "
+				     + " SET nome=?, email=?, senha=?, cpf=? "
+				     + " telefone=?, adm=?, ativo=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -85,11 +82,11 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 			stmt.setString(2, usuarioEditado.getEmail());
 			stmt.setString(3, usuarioEditado.getSenha());
 			stmt.setString(4, usuarioEditado.getCpf());
-			stmt.setInt(6, usuarioEditado.getTelefone());
-			stmt.setBoolean(7, usuarioEditado.isAdministrador());
-			stmt.setBoolean(8, usuarioEditado.isAtivo());
+			stmt.setInt(5, usuarioEditado.getTelefone());
+			stmt.setBoolean(6, usuarioEditado.isAdministrador());
+			stmt.setBoolean(7, usuarioEditado.isAtivo());
 			
-			stmt.setInt(7, usuarioEditado.getId());
+			stmt.setInt(8, usuarioEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar usuário!");
@@ -108,20 +105,22 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		
 		Usuario usuario = null;
 		ResultSet resultado = null;
-		String query = " SELECT * FROM pessoa WHERE id = " + id;
+		String query = " SELECT * FROM usuario WHERE id = " + id;
 		
 		try{
 			resultado = stmt.executeQuery(query);
+			EnderecoRepository enderecoRepository = new EnderecoRepository();
 			if(resultado.next()){
 				usuario = new Usuario();
 				usuario.setId(resultado.getInt("ID"));
 				usuario.setNome(resultado.getString("NOME"));
 				usuario.setEmail(resultado.getString("EMAIL"));
+				usuario.setSenha(resultado.getString("SENHA"));
 				usuario.setCpf(resultado.getString("CPF"));
 				usuario.setTelefone(resultado.getInt("TELEFONE")); 
 				usuario.setAdministrador(resultado.getBoolean("ADMINISTRADOR"));
 				usuario.setAtivo(resultado.getBoolean("ATIVO"));
-				
+				usuario.setEnderecos(enderecoRepository.consultarTodosPorIdUsuario(resultado.getInt("ID")));
 			}
 			
 		} catch (SQLException erro){
@@ -162,15 +161,19 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	}
 
 	private Usuario construirDoResultSet(ResultSet resultado) throws SQLException {
+		EnderecoRepository enderecoRepository = new EnderecoRepository();
 		Usuario usuario = new Usuario();
 		usuario.setId(resultado.getInt("ID"));
 		usuario.setNome(resultado.getString("NOME"));
 		usuario.setEmail(resultado.getString("EMAIL"));
+		usuario.setSenha(resultado.getString("SENHA"));
 		usuario.setCpf(resultado.getString("CPF"));
 		usuario.setTelefone(resultado.getInt("TELEFONE")); 
 		usuario.setAdministrador(resultado.getBoolean("ADMINISTRADOR"));
 		usuario.setAtivo(resultado.getBoolean("ATIVO"));
-
+		usuario.setEnderecos(enderecoRepository.consultarTodosPorIdUsuario(resultado.getInt("ID")));
+		
+		
 		return usuario;
 	}
 
@@ -179,7 +182,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
-		String query = " SELECT count(id) FROM pessoa WHERE cpf = " + cpf;
+		String query = " SELECT count(id) FROM usuario WHERE cpf = " + cpf;
 		
 		try {
 			ResultSet resultado = stmt.executeQuery(query);
@@ -191,28 +194,5 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		return cpfJaUtilizado;
 	}
 
-	public List<Usuario> consultarUsuario() {
-		ArrayList<Usuario> usuarios = new ArrayList<>();
-		Connection conn = Banco.getConnection();
-		Statement stmt = Banco.getStatement(conn);
-		
-		ResultSet resultado = null;
-		String query = " SELECT * FROM pessoa WHERE tipo = " + ;
-		
-		try{
-			resultado = stmt.executeQuery(query);
-			while(resultado.next()){
-				Usuario usuario = construirDoResultSet(resultado);
-				usuarios.add(usuario);
-			}
-		} catch (SQLException erro){
-			System.out.println("Erro ao consultar todos os usuários!");
-			System.out.println("Erro: " + erro.getMessage());
-		} finally {
-			Banco.closeResultSet(resultado);
-			Banco.closeStatement(stmt);
-			Banco.closeConnection(conn);
-		}
-		return usuarios;
-	}
+	
 }

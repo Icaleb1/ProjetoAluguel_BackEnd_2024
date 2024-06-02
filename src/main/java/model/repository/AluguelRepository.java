@@ -71,11 +71,11 @@ public class AluguelRepository {
 				stmt.setInt(1, aluguelEditado.getUsuario().getId());
 				stmt.setInt(1, aluguelEditado.getFrete().getId());
 				stmt.setDate(3, aluguelEditado.getDataAluguel());
-				stmt.setDate(3, aluguelEditado.getDataDevolucao());
-				stmt.setDate(3, aluguelEditado.getDataDevDefinitiva());
+				stmt.setDate(4, aluguelEditado.getDataDevolucao());
+				stmt.setDate(5, aluguelEditado.getDataDevDefinitiva());
 				
 				
-				stmt.setInt(7, aluguelEditado.getId());
+				stmt.setInt(6, aluguelEditado.getId());
 				alterou = stmt.executeUpdate() > 0;
 			} catch (SQLException erro) {
 				System.out.println("Erro ao atualizar aluguel ");
