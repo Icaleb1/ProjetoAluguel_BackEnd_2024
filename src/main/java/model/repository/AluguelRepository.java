@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import model.entity.Aluguel;
+import model.entity.Item;
+import model.entity.Usuario;
 
 public class AluguelRepository {
 		
@@ -87,5 +90,80 @@ public class AluguelRepository {
 			return alterou;
 		}
 
+		public Aluguel consultarPorId(int id) {
+			Connection conn = Banco.getConnection();
+			Statement stmt = Banco.getStatement(conn);
+			
+			Aluguel aluguel = null;
+			ResultSet resultado = null;
+			String query = " SELECT * FROM aluguel WHERE id = " + id;
+			
+			try{
+				resultado = stmt.executeQuery(query);
+
+				FreteRepository freteRepository = new FreteRepository();
+				UsuarioRepository usuarioRepository = new UsuarioRepository();
+				ItemRepository itemRepository = new ItemRepository();
+				
+				if(resultado.next()){
+					aluguel = new Aluguel();
+					aluguel.setId(resultado.getInt("ID"));
+					aluguel.setFrete(freteRepository.consultarPorId(resultado.getInt("ID_FRETE")));
+					aluguel.setUsuario(usuarioRepository.consultarPorId(resultado.getInt("ID_USUARIO")));
+					aluguel.setDataAluguel(resultado.getDate("DATA_ALUGUEL"));
+					aluguel.setDataDevolucao(resultado.getDate("DATA_DEVOLUCAO"));
+					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));
+					aluguel.setValorTotal(resultado.getDouble("VALOR_TOTAL"));
+					aluguel.setItens(itemRepository.consultarTodosPorIdAluguel(resultado.getInt("ID")));
+				}
+				
+			} catch (SQLException erro){
+				System.out.println("Erro ao consultar aluguel com o id: " + id);
+				System.out.println("Erro: " + erro.getMessage());
+			} finally {
+				Banco.closeResultSet(resultado);
+				Banco.closeStatement(stmt);
+				Banco.closeConnection(conn);
+			}
+			return aluguel;
+		}
+		
+		public ArrayList<Aluguel> consultarTodos() {
+			ArrayList<Aluguel> alugueis = new ArrayList<>();
+			Connection conn = Banco.getConnection();
+			Statement stmt = Banco.getStatement(conn);
+			
+			ResultSet resultado = null;
+			String query = " SELECT * FROM aluguel";
+			
+			try{
+				resultado = stmt.executeQuery(query);
+				FreteRepository freteRepository = new FreteRepository();
+				UsuarioRepository usuarioRepository = new UsuarioRepository();
+				ItemRepository itemRepository = new ItemRepository();
+				
+				while(resultado.next()){
+					Aluguel aluguel = new Aluguel();
+					aluguel.setId(resultado.getInt("ID"));
+					aluguel.setFrete(freteRepository.consultarPorId(resultado.getInt("ID_FRETE")));
+					aluguel.setUsuario(usuarioRepository.consultarPorId(resultado.getInt("ID_USUARIO")));
+					aluguel.setDataAluguel(resultado.getDate("DATA_ALUGUEL"));
+					aluguel.setDataDevolucao(resultado.getDate("DATA_DEVOLUCAO"));
+					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));
+					aluguel.setValorTotal(resultado.getDouble("VALOR_TOTAL"));
+					aluguel.setItens(itemRepository.consultarTodosPorIdAluguel(resultado.getInt("ID")));
+				}
+			} catch (SQLException erro){
+				System.out.println("Erro ao consultar todos os alugueis!");
+				System.out.println("Erro: " + erro.getMessage());
+			} finally {
+				Banco.closeResultSet(resultado);
+				Banco.closeStatement(stmt);
+				Banco.closeConnection(conn);
+			}
+			return alugueis;
+		}
+
+		
 	}
 

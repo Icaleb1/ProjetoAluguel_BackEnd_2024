@@ -10,12 +10,11 @@ import java.util.ArrayList;
 import model.entity.Endereco;
 
 
-public class EnderecoRepository implements BaseRepository<Endereco>{
+public class EnderecoRepository{
 
-	@Override
 	public Endereco salvar(Endereco novoEndereco) {
-		String sql = " INSERT INTO pessoa (id_usuario, cep, estado, cidade, "
-				   + "		               bairro, lote, numero, complemento, referencias) "
+		String sql = " INSERT INTO db_camax.endereco (id_usuario, bairro, cidade, complemento, "
+				   + "		               estado, lote, referencias, cep, numero) "
 				   + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 		Connection conexao = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
@@ -44,7 +43,6 @@ public class EnderecoRepository implements BaseRepository<Endereco>{
 		return novoEndereco;
 	}
 
-	@Override
 	public boolean excluir(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -64,7 +62,7 @@ public class EnderecoRepository implements BaseRepository<Endereco>{
 		return excluiu;
 	}
 
-	@Override
+
 	public boolean alterar(Endereco EnderecoEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.endereco "
@@ -96,7 +94,7 @@ public class EnderecoRepository implements BaseRepository<Endereco>{
 		return alterou;
 	}
 
-	@Override
+
 	public Endereco consultarPorId(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -132,7 +130,7 @@ public class EnderecoRepository implements BaseRepository<Endereco>{
 		return endereco;
 	}
 
-	@Override
+
 	public ArrayList<Endereco> consultarTodos() {
 		ArrayList<Endereco> enderecos = new ArrayList<>();
 		Connection conn = Banco.getConnection();

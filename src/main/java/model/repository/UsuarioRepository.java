@@ -12,13 +12,14 @@ import java.util.List;
 
 import model.entity.Endereco;
 import model.entity.Usuario;
-import model.entity.vacinacao.Pessoa;
+
 import model.repository.Banco;
-import model.repository.BaseRepository;
 
-public class UsuarioRepository implements BaseRepository<Usuario> {
 
-	@Override
+
+public class UsuarioRepository {
+
+
 	public Usuario salvar(Usuario novoUsuario) {
 		String sql = " INSERT INTO usuario (nome, email, senha, cpf, "
 				   + "		               telefone, adm, ativo) "
@@ -48,7 +49,6 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		return novoUsuario;
 	}
 
-	@Override
 	public boolean excluir(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -68,7 +68,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		return excluiu;
 	}
 
-	@Override
+
 	public boolean alterar(Usuario usuarioEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.usuario "
@@ -98,7 +98,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		return alterou;
 	}
 
-	@Override
+
 	public Usuario consultarPorId(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -134,7 +134,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		return usuario;
 	}
 
-	@Override
+
 	public ArrayList<Usuario> consultarTodos() {
 		ArrayList<Usuario> usuarios = new ArrayList<>();
 		Connection conn = Banco.getConnection();

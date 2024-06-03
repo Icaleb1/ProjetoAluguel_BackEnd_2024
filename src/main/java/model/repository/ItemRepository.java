@@ -141,4 +141,35 @@ public class ItemRepository {
 		}
 		return items;
 	}
+	
+	public ArrayList<Item> consultarTodosPorIdAluguel(int idAluguel) {
+		ArrayList<Item> items = new ArrayList<>();
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		String query = " SELECT * FROM item where id_aluguel = " + idAluguel;
+		
+		try{
+			resultado = stmt.executeQuery(query);
+			BrinquedoRepository brinquedoRepository = new BrinquedoRepository();
+			
+			while(resultado.next()){
+				Item item = new Item();
+				item.setId(resultado.getInt("ID"));
+				item.setAluguel(resultado.getInt("ID_ALUGUEL"));
+				item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_VACINA")));
+				items.add(item);
+			}
+
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar todos os items");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return items;
+	}
 }

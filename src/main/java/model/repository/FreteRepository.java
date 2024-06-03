@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import model.entity.Frete;
 
 
-public class FreteRepository implements BaseRepository<Frete> {
+public class FreteRepository{
 
-	@Override
+
 	public Frete salvar(Frete novoFrete) {
 		String sql = " INSERT INTO pessoa (nome, cpf, sexo, id_pais, "
 				   + "		               data_nascimento, tipo) "
@@ -39,7 +39,7 @@ public class FreteRepository implements BaseRepository<Frete> {
 		return novoFrete;
 	}
 
-	@Override
+
 	public boolean excluir(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -59,7 +59,7 @@ public class FreteRepository implements BaseRepository<Frete> {
 		return excluiu;
 	}
 
-	@Override
+	
 	public boolean alterar(Frete freteEditado) {
 		boolean alterou = false;
 		String query = " UPDATE exemplos.pessoa "
@@ -85,7 +85,7 @@ public class FreteRepository implements BaseRepository<Frete> {
 		return alterou;
 	}
 
-	@Override
+
 	public Frete consultarPorId(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -114,7 +114,7 @@ public class FreteRepository implements BaseRepository<Frete> {
 		return frete;
 	}
 
-	@Override
+
 	public ArrayList<Frete> consultarTodos() {
 		ArrayList<Frete> fretes = new ArrayList<>();
 		Connection conn = Banco.getConnection();
