@@ -1,5 +1,6 @@
 package model.entity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class Usuario {
@@ -9,6 +10,7 @@ public class Usuario {
 	private String email;
 	private String senha;
 	private String cpf;
+	private LocalDate data_nascimento;
 	private int telefone;
 	private boolean administrador;
 	private List<Endereco> enderecos;    
@@ -21,7 +23,7 @@ public class Usuario {
 	}
 
 
-	public Usuario(int id, String nome, String email, String senha, String cpf, int telefone, boolean administrador,
+	public Usuario(int id, String nome, String email, String senha, String cpf, LocalDate data_nascimento, int telefone, boolean administrador,
 			List<Endereco> enderecos, boolean ativo) {
 		super();
 		this.id = id;
@@ -29,6 +31,7 @@ public class Usuario {
 		this.email = email;
 		this.senha = senha;
 		this.cpf = cpf;
+		this.data_nascimento = data_nascimento;
 		this.telefone = telefone;
 		this.administrador = administrador;
 		this.enderecos = enderecos;
@@ -123,6 +126,16 @@ public class Usuario {
 
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
+	}
+
+
+	public LocalDate getData_nascimento() {
+		return data_nascimento;
+	}
+
+
+	public void setData_nascimento(LocalDate data_nascimento) {
+		this.data_nascimento = data_nascimento;
 	}
 	
 	

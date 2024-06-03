@@ -1,6 +1,5 @@
 package model.repository;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -8,12 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
-import model.entity.Endereco;
 import model.entity.Usuario;
 
-import model.repository.Banco;
 
 
 
@@ -22,8 +18,8 @@ public class UsuarioRepository {
 
 	public Usuario salvar(Usuario novoUsuario) {
 		String sql = " INSERT INTO usuario (nome, email, senha, cpf, "
-				   + "		               telefone, adm, ativo) "
-				   + " VALUES(?, ?, ?, ?, ?, ?, ?) ";
+				   + "		               data_nascimento, telefone, adm, ativo) "
+				   + " VALUES(?, ?, ?, ?, ?, ?, ?, ?) ";
 		Connection conexao = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		
@@ -32,6 +28,7 @@ public class UsuarioRepository {
 			stmt.setString(2, novoUsuario.getEmail());
 			stmt.setString(3, novoUsuario.getSenha());
 			stmt.setString(4, novoUsuario.getCpf());
+			stmt.setDate(5, Date.valueOf(novoUsuario.getData_nascimento()));
 			stmt.setInt(6, novoUsuario.getTelefone());
 			stmt.setBoolean(7, novoUsuario.isAdministrador());	
 			stmt.setBoolean(8, novoUsuario.isAtivo());
@@ -73,7 +70,7 @@ public class UsuarioRepository {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.usuario "
 				     + " SET nome=?, email=?, senha=?, cpf=? "
-				     + " telefone=?, adm=?, ativo=? "
+				     + " data_nascimento=?, telefone=?, adm=?, ativo=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -82,9 +79,10 @@ public class UsuarioRepository {
 			stmt.setString(2, usuarioEditado.getEmail());
 			stmt.setString(3, usuarioEditado.getSenha());
 			stmt.setString(4, usuarioEditado.getCpf());
-			stmt.setInt(5, usuarioEditado.getTelefone());
-			stmt.setBoolean(6, usuarioEditado.isAdministrador());
-			stmt.setBoolean(7, usuarioEditado.isAtivo());
+			stmt.setDate(5, Date.valueOf(usuarioEditado.getData_nascimento()));
+			stmt.setInt(6, usuarioEditado.getTelefone());
+			stmt.setBoolean(7, usuarioEditado.isAdministrador());
+			stmt.setBoolean(8, usuarioEditado.isAtivo());
 			
 			stmt.setInt(8, usuarioEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
@@ -117,6 +115,7 @@ public class UsuarioRepository {
 				usuario.setEmail(resultado.getString("EMAIL"));
 				usuario.setSenha(resultado.getString("SENHA"));
 				usuario.setCpf(resultado.getString("CPF"));
+				usuario.setData_nascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
 				usuario.setTelefone(resultado.getInt("TELEFONE")); 
 				usuario.setAdministrador(resultado.getBoolean("ADMINISTRADOR"));
 				usuario.setAtivo(resultado.getBoolean("ATIVO"));
@@ -168,6 +167,7 @@ public class UsuarioRepository {
 		usuario.setEmail(resultado.getString("EMAIL"));
 		usuario.setSenha(resultado.getString("SENHA"));
 		usuario.setCpf(resultado.getString("CPF"));
+		usuario.setData_nascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
 		usuario.setTelefone(resultado.getInt("TELEFONE")); 
 		usuario.setAdministrador(resultado.getBoolean("ADMINISTRADOR"));
 		usuario.setAtivo(resultado.getBoolean("ATIVO"));
