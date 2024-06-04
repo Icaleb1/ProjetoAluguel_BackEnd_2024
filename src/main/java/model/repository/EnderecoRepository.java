@@ -47,7 +47,7 @@ public class EnderecoRepository{
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean excluiu = false;
-		String query = "DELETE FROM endereco WHERE id = " + id;
+		String query = "DELETE FROM db_camax.endereco WHERE id = " + id;
 		try {
 			if(stmt.executeUpdate(query) == 1) {
 				excluiu = true;
@@ -66,8 +66,8 @@ public class EnderecoRepository{
 	public boolean alterar(Endereco EnderecoEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.endereco "
-				     + " SET id_usuario=?, cep=?, estado=?, cidade=? "
-				     + " bairro=?, lote=?, numero=?, complemento=?, referencias=? "
+				     + " SET id_usuario=?, bairro=?, cidade=?, complemento=?, "
+				     + " estado=?, lote=?, referencias=?, cep=?, numero=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -82,7 +82,7 @@ public class EnderecoRepository{
 			stmt.setInt(8, EnderecoEditado.getCep());
 			stmt.setInt(9, EnderecoEditado.getNumero());
 			
-			stmt.setInt(7, EnderecoEditado.getId());
+			stmt.setInt(10, EnderecoEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar endereço!");
@@ -101,7 +101,7 @@ public class EnderecoRepository{
 		
 		Endereco endereco = null;
 		ResultSet resultado = null;
-		String query = " SELECT * FROM endereco WHERE id = " + id;
+		String query = " SELECT * FROM db_camax.endereco WHERE id = " + id;
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -114,7 +114,7 @@ public class EnderecoRepository{
 				endereco.setComplemento(resultado.getString("COMPLEMENTO"));
 				endereco.setEstado(resultado.getString("ESTADO")); 
 				endereco.setLote(resultado.getString("LOTE"));
-				endereco.setReferencia(resultado.getString("REFERENCIA"));
+				endereco.setReferencia(resultado.getString("REFERENCIAs"));
 				endereco.setCep(resultado.getInt("CEP"));
 				endereco.setNumero(resultado.getInt("NUMERO"));
 				
@@ -137,7 +137,7 @@ public class EnderecoRepository{
 		Statement stmt = Banco.getStatement(conn);
 		
 		ResultSet resultado = null;
-		String query = " SELECT * FROM endereco";
+		String query = " SELECT * FROM db_camax.endereco";
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -165,7 +165,7 @@ public class EnderecoRepository{
 		endereco.setComplemento(resultado.getString("COMPLEMENTO"));
 		endereco.setEstado(resultado.getString("ESTADO")); 
 		endereco.setLote(resultado.getString("LOTE"));
-		endereco.setReferencia(resultado.getString("REFERENCIA"));
+		endereco.setReferencia(resultado.getString("REFERENCIAS"));
 		endereco.setCep(resultado.getInt("CEP"));
 		endereco.setNumero(resultado.getInt("NUMERO"));
 

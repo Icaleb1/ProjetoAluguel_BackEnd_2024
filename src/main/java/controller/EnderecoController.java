@@ -47,7 +47,7 @@ public class EnderecoController {
 	}
 	
 	@GET
-	@Path("/todas")
+	@Path("/todos")
 	public List<Endereco> consultarTodas(){
 		return enderecoService.consultarTodos();
 	}
