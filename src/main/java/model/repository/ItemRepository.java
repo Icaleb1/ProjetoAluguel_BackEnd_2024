@@ -13,12 +13,12 @@ import model.entity.Item;
 public class ItemRepository {
 	
 	public Item salvar(Item novoItem) {
-		String query = "INSERT INTO item (id_aluguel, id_brinquedo, alugado) VALUES (?,?,?)";
+		String query = "INSERT INTO db_camax.item (id_aluguel, id_brinquedo, alugado) VALUES (?,?,?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement psmt = Banco.getPreparedStatementWithPk(conn, query);
 		
 		try {
-			psmt.setInt(1, novoItem.getAluguel());
+			psmt.setInt(1, novoItem.getId_Aluguel());
 			psmt.setInt(2, novoItem.getBrinquedo().getId());
 			psmt.setBoolean(3, novoItem.isAlugado());			
 			psmt.execute();
@@ -41,7 +41,7 @@ public class ItemRepository {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean excluiu = false;
-		String query = "DELETE FROM item WHERE id = " + id;
+		String query = "DELETE FROM db_camax.item WHERE id = " + id;
 		try {
 			if (stmt.executeUpdate(query) == 1) {
 				excluiu = true;
@@ -64,7 +64,7 @@ public class ItemRepository {
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
-			stmt.setInt(1, itemEditado.getAluguel());
+			stmt.setInt(1, itemEditado.getId_Aluguel());
 			stmt.setInt(2, itemEditado.getBrinquedo().getId());
 			stmt.setBoolean(3, itemEditado.isAlugado());
 			
@@ -86,7 +86,7 @@ public class ItemRepository {
 		
 		Item item = null;
 		ResultSet resultado = null;
-		String query = " SELECT * FROM item WHERE id = " + id;
+		String query = " SELECT * FROM db_camax.item WHERE id = " + id;
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -95,7 +95,7 @@ public class ItemRepository {
 			if(resultado.next()){
 				item = new Item();
 				item.setId(resultado.getInt("ID"));
-				item.setAluguel(resultado.getInt("ID_ALUGUEL"));
+				item.setId_Aluguel(resultado.getInt("ID_ALUGUEL"));
 				item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_VACINA")));
 				
 				
@@ -117,7 +117,7 @@ public class ItemRepository {
 		Statement stmt = Banco.getStatement(conn);
 		
 		ResultSet resultado = null;
-		String query = " SELECT * FROM item";
+		String query = " SELECT * FROM db_camax.item";
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -126,8 +126,8 @@ public class ItemRepository {
 			while(resultado.next()){
 				Item item = new Item();
 				item.setId(resultado.getInt("ID"));
-				item.setAluguel(resultado.getInt("ID_ALUGUEL"));
-				item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_VACINA")));
+				item.setId_Aluguel(resultado.getInt("ID_ALUGUEL"));
+				item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_BRINQUEDO")));
 				items.add(item);
 			}
 
@@ -148,7 +148,7 @@ public class ItemRepository {
 		Statement stmt = Banco.getStatement(conn);
 		
 		ResultSet resultado = null;
-		String query = " SELECT * FROM item where id_aluguel = " + idAluguel;
+		String query = " SELECT * FROM db_camax.item where id_aluguel = " + idAluguel;
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -157,7 +157,7 @@ public class ItemRepository {
 			while(resultado.next()){
 				Item item = new Item();
 				item.setId(resultado.getInt("ID"));
-				item.setAluguel(resultado.getInt("ID_ALUGUEL"));
+				item.setId_Aluguel(resultado.getInt("ID_ALUGUEL"));
 				item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_VACINA")));
 				items.add(item);
 			}

@@ -13,7 +13,7 @@ import model.entity.Brinquedo;
 public class BrinquedoRepository {
 	
 	public Brinquedo salvar(Brinquedo novoBrinquedo) {
-		String query = "INSERT INTO brinquedo (nome, descricao, qtde_em_estoque, "
+		String query = "INSERT INTO db_camax.brinquedo (nome, descricao, qtd_em_estoque, "
 					 + "valor_diaria) VALUES (?,?,?,?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement psmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -44,7 +44,7 @@ public class BrinquedoRepository {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean excluiu = false;
-		String query = "DELETE FROM brinquedo WHERE id = " + id;
+		String query = "DELETE FROM db_camax.brinquedo WHERE id = " + id;
 		try {
 			if (stmt.executeUpdate(query) == 1) {
 				excluiu = true;
@@ -62,7 +62,7 @@ public class BrinquedoRepository {
 	public boolean alterar(Brinquedo brinquedoEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.brinquedo "
-				     + " SET nome=?, descricao=?, qtde_em_estoque=?, valor_diaria=?"
+				     + " SET nome=?, descricao=?, qtd_em_estoque=?, valor_diaria=?"
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -90,7 +90,7 @@ public class BrinquedoRepository {
 		
 		Brinquedo brinquedo = null;
 		ResultSet resultado = null;
-		String query = " SELECT * FROM brinquedo WHERE id = " + id;
+		String query = " SELECT * FROM db_camax.brinquedo WHERE id = " + id;
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -100,7 +100,7 @@ public class BrinquedoRepository {
 				brinquedo.setId(resultado.getInt("ID"));
 				brinquedo.setNome(resultado.getString("NOME"));
 				brinquedo.setDescricao(resultado.getString("DESCRICAO"));
-				brinquedo.setQuantEstoque(resultado.getInt("QTDE_EM_ESTOQUE"));
+				brinquedo.setQuantEstoque(resultado.getInt("QTD_EM_ESTOQUE"));
 				brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
 			}
 		} catch (SQLException erro){
@@ -120,7 +120,7 @@ public class BrinquedoRepository {
 		Statement stmt = Banco.getStatement(conn);
 		
 		ResultSet resultado = null;
-		String query = " SELECT * FROM brinquedo";
+		String query = " SELECT * FROM db_camax.brinquedo";
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -130,7 +130,7 @@ public class BrinquedoRepository {
 				brinquedo.setId(resultado.getInt("ID"));
 				brinquedo.setNome(resultado.getString("NOME"));
 				brinquedo.setDescricao(resultado.getString("DESCRICAO"));
-				brinquedo.setQuantEstoque(resultado.getInt("QTDE_EM_ESTOQUE"));
+				brinquedo.setQuantEstoque(resultado.getInt("QTD_EM_ESTOQUE"));
 				brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
 				brinquedos.add(brinquedo);
 			}

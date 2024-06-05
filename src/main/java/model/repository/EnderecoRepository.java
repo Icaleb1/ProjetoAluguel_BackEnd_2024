@@ -178,7 +178,7 @@ public class EnderecoRepository{
 		Statement stmt = Banco.getStatement(conn);
 		
 		ResultSet resultado = null;
-		String query = " SELECT * FROM endereco WHERE id_usuario = ";
+		String query = " SELECT * FROM db_camax.endereco WHERE id_usuario = " + idUsuario;
 		
 		try{
 			resultado = stmt.executeQuery(query);

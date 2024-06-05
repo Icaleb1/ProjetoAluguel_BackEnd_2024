@@ -14,9 +14,8 @@ public class FreteRepository{
 
 
 	public Frete salvar(Frete novoFrete) {
-		String sql = " INSERT INTO pessoa (nome, cpf, sexo, id_pais, "
-				   + "		               data_nascimento, tipo) "
-				   + " VALUES(?, ?, ?, ?, ?, ?) ";
+		String sql = " INSERT INTO db_camax.frete (descricao, valor) "
+				   + " VALUES(?, ?) ";
 		Connection conexao = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		
@@ -44,7 +43,7 @@ public class FreteRepository{
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean excluiu = false;
-		String query = "DELETE FROM pessoa WHERE id = " + id;
+		String query = "DELETE FROM db_camax.frete WHERE id = " + id;
 		try {
 			if(stmt.executeUpdate(query) == 1) {
 				excluiu = true;
@@ -62,9 +61,8 @@ public class FreteRepository{
 	
 	public boolean alterar(Frete freteEditado) {
 		boolean alterou = false;
-		String query = " UPDATE exemplos.pessoa "
-				     + " SET nome=?, cpf=?, sexo=?, id_pais=? "
-				     + " data_nascimento=?, tipo=? "
+		String query = " UPDATE db_camax.frete "
+				     + " SET descricao=?, valor=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -73,7 +71,7 @@ public class FreteRepository{
 			stmt.setDouble(2, freteEditado.getValor());
 			
 			
-			stmt.setInt(7, freteEditado.getId());
+			stmt.setInt(3, freteEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar frete!");
@@ -92,7 +90,7 @@ public class FreteRepository{
 		
 		Frete frete = null;
 		ResultSet resultado = null;
-		String query = " SELECT * FROM pessoa WHERE id = " + id;
+		String query = " SELECT * FROM db_camax.frete WHERE id = " + id;
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -121,7 +119,7 @@ public class FreteRepository{
 		Statement stmt = Banco.getStatement(conn);
 		
 		ResultSet resultado = null;
-		String query = " SELECT * FROM pessoa";
+		String query = " SELECT * FROM db_camax.frete";
 		
 		try{
 			resultado = stmt.executeQuery(query);

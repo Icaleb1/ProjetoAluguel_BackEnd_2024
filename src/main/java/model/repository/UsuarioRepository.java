@@ -17,7 +17,7 @@ public class UsuarioRepository {
 
 
 	public Usuario salvar(Usuario novoUsuario) {
-		String sql = " INSERT INTO usuario (nome, email, senha, cpf, "
+		String sql = " INSERT INTO db_camax.usuario (nome, email, senha, cpf, "
 				   + "		               data_nascimento, telefone, adm, ativo) "
 				   + " VALUES(?, ?, ?, ?, ?, ?, ?, ?) ";
 		Connection conexao = Banco.getConnection();
@@ -50,7 +50,7 @@ public class UsuarioRepository {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean excluiu = false;
-		String query = "DELETE FROM usuario WHERE id = " + id;
+		String query = "DELETE FROM db_camax.usuario WHERE id = " + id;
 		try {
 			if(stmt.executeUpdate(query) == 1) {
 				excluiu = true;
@@ -69,7 +69,7 @@ public class UsuarioRepository {
 	public boolean alterar(Usuario usuarioEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.usuario "
-				     + " SET nome=?, email=?, senha=?, cpf=? "
+				     + " SET nome=?, email=?, senha=?, cpf=?, "
 				     + " data_nascimento=?, telefone=?, adm=?, ativo=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
@@ -84,7 +84,7 @@ public class UsuarioRepository {
 			stmt.setBoolean(7, usuarioEditado.isAdministrador());
 			stmt.setBoolean(8, usuarioEditado.isAtivo());
 			
-			stmt.setInt(8, usuarioEditado.getId());
+			stmt.setInt(9, usuarioEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar usuário!");
@@ -103,7 +103,7 @@ public class UsuarioRepository {
 		
 		Usuario usuario = null;
 		ResultSet resultado = null;
-		String query = " SELECT * FROM usuario WHERE id = " + id;
+		String query = " SELECT * FROM db_camax.usuario WHERE id = " + id;
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -140,7 +140,7 @@ public class UsuarioRepository {
 		Statement stmt = Banco.getStatement(conn);
 		
 		ResultSet resultado = null;
-		String query = " SELECT * FROM pessoa";
+		String query = " SELECT * FROM db_camax.usuario";
 		
 		try{
 			resultado = stmt.executeQuery(query);
@@ -169,7 +169,7 @@ public class UsuarioRepository {
 		usuario.setCpf(resultado.getString("CPF"));
 		usuario.setData_nascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
 		usuario.setTelefone(resultado.getInt("TELEFONE")); 
-		usuario.setAdministrador(resultado.getBoolean("ADMINISTRADOR"));
+		usuario.setAdministrador(resultado.getBoolean("ADM"));
 		usuario.setAtivo(resultado.getBoolean("ATIVO"));
 		usuario.setEnderecos(enderecoRepository.consultarTodosPorIdUsuario(resultado.getInt("ID")));
 		
@@ -182,7 +182,7 @@ public class UsuarioRepository {
 		
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
-		String query = " SELECT count(id) FROM usuario WHERE cpf = " + cpf;
+		String query = " SELECT count(id) FROM db_camax.usuario WHERE cpf = " + cpf;
 		
 		try {
 			ResultSet resultado = stmt.executeQuery(query);

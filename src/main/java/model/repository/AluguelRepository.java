@@ -14,7 +14,7 @@ import model.entity.Usuario;
 public class AluguelRepository {
 		
 		public Aluguel salvar(Aluguel novoAluguel) {
-			String query = "INSERT INTO aluguel (id_usuario, id_frete, data_aluguel, data_devolucao,"
+			String query = "INSERT INTO db_camax.aluguel (id_usuario, id_frete, data_aluguel, data_devolucao,"
 					+ " data_devolucao_definitiva, valor_total) VALUES (?,?,?,?,?,?)";
 			
 			Connection conn = Banco.getConnection();
@@ -47,7 +47,7 @@ public class AluguelRepository {
 			Connection conn = Banco.getConnection();
 			Statement stmt = Banco.getStatement(conn);
 			boolean excluiu = false;
-			String query = "DELETE FROM aluguel WHERE id = " + id;
+			String query = "DELETE FROM db_camax.aluguel WHERE id = " + id;
 			try {
 				if (stmt.executeUpdate(query) == 1) {
 					excluiu = true;
@@ -66,19 +66,19 @@ public class AluguelRepository {
 			boolean alterou = false;
 			String query = " UPDATE db_camax.aluguel "
 					     + " SET id_usuario=?, id_frete=?, data_aluguel=?, data_devolucao=?,"
-					     + " data_devolucao_definitiva=?, valor_total"
+					     + " data_devolucao_definitiva=?, valor_total=?"
 					     + " WHERE id=? ";
 			Connection conn = Banco.getConnection();
 			PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 			try {
 				stmt.setInt(1, aluguelEditado.getUsuario().getId());
-				stmt.setInt(1, aluguelEditado.getFrete().getId());
+				stmt.setInt(2, aluguelEditado.getFrete().getId());
 				stmt.setDate(3, aluguelEditado.getDataAluguel());
 				stmt.setDate(4, aluguelEditado.getDataDevolucao());
 				stmt.setDate(5, aluguelEditado.getDataDevDefinitiva());
+				stmt.setDouble(6, aluguelEditado.getValorTotal());
 				
-				
-				stmt.setInt(6, aluguelEditado.getId());
+				stmt.setInt(7, aluguelEditado.getId());
 				alterou = stmt.executeUpdate() > 0;
 			} catch (SQLException erro) {
 				System.out.println("Erro ao atualizar aluguel ");
@@ -96,7 +96,7 @@ public class AluguelRepository {
 			
 			Aluguel aluguel = null;
 			ResultSet resultado = null;
-			String query = " SELECT * FROM aluguel WHERE id = " + id;
+			String query = " SELECT * FROM db_camax.aluguel WHERE id = " + id;
 			
 			try{
 				resultado = stmt.executeQuery(query);
@@ -134,7 +134,7 @@ public class AluguelRepository {
 			Statement stmt = Banco.getStatement(conn);
 			
 			ResultSet resultado = null;
-			String query = " SELECT * FROM aluguel";
+			String query = " SELECT * FROM db_camax.aluguel";
 			
 			try{
 				resultado = stmt.executeQuery(query);
@@ -152,6 +152,7 @@ public class AluguelRepository {
 					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));
 					aluguel.setValorTotal(resultado.getDouble("VALOR_TOTAL"));
 					aluguel.setItens(itemRepository.consultarTodosPorIdAluguel(resultado.getInt("ID")));
+					alugueis.add(aluguel);
 				}
 			} catch (SQLException erro){
 				System.out.println("Erro ao consultar todos os alugueis!");

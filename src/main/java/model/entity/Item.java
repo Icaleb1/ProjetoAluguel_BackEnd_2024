@@ -53,14 +53,17 @@ public class Item {
 	}
 
 
-	public int getAluguel() {
+	public int getId_Aluguel() {
 		return id_Aluguel;
 	}
 
 
-	public void setAluguel(int aluguel) {
-		this.id_Aluguel = aluguel;
+	public void setId_Aluguel(int id_Aluguel) {
+		this.id_Aluguel = id_Aluguel;
 	}
+
+
+	
 
 	
 	
