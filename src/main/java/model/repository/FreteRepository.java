@@ -14,14 +14,13 @@ public class FreteRepository{
 
 
 	public Frete salvar(Frete novoFrete) {
-		String sql = " INSERT INTO db_camax.frete (descricao, valor) "
-				   + " VALUES(?, ?) ";
+		String sql = " INSERT INTO db_camax.frete (valor) "
+				   + " VALUES(?) ";
 		Connection conexao = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		
 		try {
-			stmt.setString(1, novoFrete.getDescricao());
-			stmt.setDouble(2, novoFrete.getValor());
+			stmt.setDouble(1, novoFrete.getValor());
 		
 			
 			
@@ -62,16 +61,15 @@ public class FreteRepository{
 	public boolean alterar(Frete freteEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.frete "
-				     + " SET descricao=?, valor=? "
+				     + " SET valor=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
-			stmt.setString(1, freteEditado.getDescricao());
-			stmt.setDouble(2, freteEditado.getValor());
+			stmt.setDouble(1, freteEditado.getValor());
 			
 			
-			stmt.setInt(3, freteEditado.getId());
+			stmt.setInt(2, freteEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar frete!");
@@ -97,7 +95,6 @@ public class FreteRepository{
 			if(resultado.next()){
 				frete = new Frete();
 				frete.setId(resultado.getInt("ID"));
-				frete.setDescricao(resultado.getString("DESCRICAO"));
 				frete.setValor(resultado.getDouble("VALOR"));
 				
 			}
@@ -141,7 +138,6 @@ public class FreteRepository{
 	private Frete construirDoResultSet(ResultSet resultado) throws SQLException {
 		Frete frete = new Frete();
 		frete.setId(resultado.getInt("ID"));
-		frete.setDescricao(resultado.getString("DESCRICAO"));
 		frete.setValor(resultado.getDouble("VALOR"));
 		
 

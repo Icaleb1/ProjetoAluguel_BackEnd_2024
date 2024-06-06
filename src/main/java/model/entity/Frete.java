@@ -3,7 +3,6 @@ package model.entity;
 public class Frete {
 	
 	private int id;
-	private String descricao;
 	private double valor;
 	
 	
@@ -13,10 +12,9 @@ public class Frete {
 	}
 
 
-	public Frete(int id, String descricao, double valor) {
+	public Frete(int id, double valor) {
 		super();
 		this.id = id;
-		this.descricao = descricao;
 		this.valor = valor;
 	}
 
@@ -28,16 +26,6 @@ public class Frete {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
 	}
 
 

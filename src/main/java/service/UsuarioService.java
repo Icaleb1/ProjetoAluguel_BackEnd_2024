@@ -11,8 +11,8 @@ public class UsuarioService {
 	private UsuarioRepository usuarioRepository = new UsuarioRepository();
 	
 	public Usuario salvar(Usuario novoUsuario) throws AlugueisException {
-		validarCamposObrigatorios(novoUsuario);
 		validarCpf(novoUsuario);
+		validarCamposObrigatorios(novoUsuario);
 		validarIdade(novoUsuario);
 		return usuarioRepository.salvar(novoUsuario);
 	}
@@ -22,8 +22,8 @@ public class UsuarioService {
 	}
 	
 	public boolean alterar(Usuario usuarioEditado) throws AlugueisException {
-		validarCamposObrigatorios(usuarioEditado);
 		validarCpf(usuarioEditado);
+		validarCamposObrigatorios(usuarioEditado);
 		validarIdade(usuarioEditado);
 		return usuarioRepository.alterar(usuarioEditado);
 	}
@@ -48,7 +48,7 @@ public class UsuarioService {
 		if (usuarioValidado.getCpf() == null || usuarioValidado.getCpf().isEmpty() || usuarioValidado.getCpf().length() != 11) {
 			mensagemValidacao = "CPF obrigatório!";
 		}
-		if (usuarioValidado.getTelefone() == 0) {
+		if (usuarioValidado.getTelefone() == null || usuarioValidado.getTelefone().isEmpty()) {
 			mensagemValidacao = "Telefone é obrigatório!";		
 		}
 		if (usuarioValidado.getData_nascimento() == null) {

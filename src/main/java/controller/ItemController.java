@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import exception.AlugueisException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -22,7 +23,7 @@ public class ItemController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Item salvar(Item novoItem) {
+	public Item salvar(Item novoItem) throws AlugueisException {
 		return itemService.salvar(novoItem);
 	}
 	
@@ -37,7 +38,7 @@ public class ItemController {
 	@Path("/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar(Item itemAlterado){
+	public boolean alterar(Item itemAlterado) throws AlugueisException{
 		return itemService.alterar(itemAlterado);
 	}
 	

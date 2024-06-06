@@ -2,13 +2,16 @@ package service;
 
 import java.util.List;
 
+import exception.AlugueisException;
 import model.entity.Item;
+import model.entity.Usuario;
 import model.repository.ItemRepository;
 
 public class ItemService {
 private ItemRepository itemRepository = new ItemRepository();
 	
-	public Item salvar(Item novoItem) {
+	public Item salvar(Item novoItem) throws AlugueisException {
+		validarCamposObrigatorios(novoItem);
 		return itemRepository.salvar(novoItem);
 	}
 	
@@ -16,7 +19,8 @@ private ItemRepository itemRepository = new ItemRepository();
 		return itemRepository.excluir(id);
 	}
 	
-	public boolean alterar(Item itemEditado) {
+	public boolean alterar(Item itemEditado) throws AlugueisException {
+		validarCamposObrigatorios(itemEditado);
 		return itemRepository.alterar(itemEditado);
 	}
 	
@@ -26,6 +30,21 @@ private ItemRepository itemRepository = new ItemRepository();
 	
 	public List<Item> consultarTodos(){
 		return itemRepository.consultarTodos();
+	}
+	
+	private void validarCamposObrigatorios(Item itemValidado) throws AlugueisException {
+		String mensagemValidacao = "";
+		
+		if (itemValidado.getBrinquedo() == null) {
+			mensagemValidacao = "Brinquedo obrigatório!";
+		}
+		
+		
+		if (!mensagemValidacao.isEmpty()) {
+			throw new AlugueisException("Preencha os seguintes campos: " + mensagemValidacao);
+			
+		}
+
 	}
 
 

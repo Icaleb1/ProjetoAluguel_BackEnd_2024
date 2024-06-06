@@ -15,7 +15,7 @@ public class AluguelRepository {
 		
 		public Aluguel salvar(Aluguel novoAluguel) {
 			String query = "INSERT INTO db_camax.aluguel (id_usuario, id_frete, data_aluguel, data_devolucao,"
-					+ " data_devolucao_definitiva, valor_total) VALUES (?,?,?,?,?,?)";
+					+ " data_devolucao_definitiva, valor_total, distancia) VALUES (?,?,?,?,?,?,?)";
 			
 			Connection conn = Banco.getConnection();
 			PreparedStatement psmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -27,6 +27,7 @@ public class AluguelRepository {
 				psmt.setDate(4, novoAluguel.getDataDevolucao());
 				psmt.setDate(5, novoAluguel.getDataDevDefinitiva());
 				psmt.setDouble(6, novoAluguel.getValorTotal());
+				psmt.setInt(7, novoAluguel.getDistancia());
 				psmt.execute();
 				ResultSet resultado = psmt.getGeneratedKeys();
 				if (resultado.next()) {
@@ -66,7 +67,7 @@ public class AluguelRepository {
 			boolean alterou = false;
 			String query = " UPDATE db_camax.aluguel "
 					     + " SET id_usuario=?, id_frete=?, data_aluguel=?, data_devolucao=?,"
-					     + " data_devolucao_definitiva=?, valor_total=?"
+					     + " data_devolucao_definitiva=?, valor_total=?, distancia=?"
 					     + " WHERE id=? ";
 			Connection conn = Banco.getConnection();
 			PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -77,8 +78,9 @@ public class AluguelRepository {
 				stmt.setDate(4, aluguelEditado.getDataDevolucao());
 				stmt.setDate(5, aluguelEditado.getDataDevDefinitiva());
 				stmt.setDouble(6, aluguelEditado.getValorTotal());
+				stmt.setInt(7, aluguelEditado.getDistancia());
 				
-				stmt.setInt(7, aluguelEditado.getId());
+				stmt.setInt(8, aluguelEditado.getId());
 				alterou = stmt.executeUpdate() > 0;
 			} catch (SQLException erro) {
 				System.out.println("Erro ao atualizar aluguel ");
@@ -115,6 +117,7 @@ public class AluguelRepository {
 					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));
 					aluguel.setValorTotal(resultado.getDouble("VALOR_TOTAL"));
 					aluguel.setItens(itemRepository.consultarTodosPorIdAluguel(resultado.getInt("ID")));
+					aluguel.setDistancia(resultado.getInt("DISTANCIA"));
 				}
 				
 			} catch (SQLException erro){
@@ -152,6 +155,7 @@ public class AluguelRepository {
 					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));
 					aluguel.setValorTotal(resultado.getDouble("VALOR_TOTAL"));
 					aluguel.setItens(itemRepository.consultarTodosPorIdAluguel(resultado.getInt("ID")));
+					aluguel.setDistancia(resultado.getInt("DISTANCIA"));
 					alugueis.add(aluguel);
 				}
 			} catch (SQLException erro){

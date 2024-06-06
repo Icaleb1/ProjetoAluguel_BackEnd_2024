@@ -31,7 +31,7 @@ public class UsuarioRepository {
 			stmt.setString(3, novoUsuario.getSenha());
 			stmt.setString(4, novoUsuario.getCpf());
 			stmt.setDate(5, Date.valueOf(novoUsuario.getData_nascimento()));
-			stmt.setInt(6, novoUsuario.getTelefone());
+			stmt.setString(6, novoUsuario.getTelefone());
 			stmt.setBoolean(7, novoUsuario.isAdministrador());	
 			stmt.setBoolean(8, novoUsuario.isAtivo());
 			
@@ -82,7 +82,7 @@ public class UsuarioRepository {
 			stmt.setString(3, usuarioEditado.getSenha());
 			stmt.setString(4, usuarioEditado.getCpf());
 			stmt.setDate(5, Date.valueOf(usuarioEditado.getData_nascimento()));
-			stmt.setInt(6, usuarioEditado.getTelefone());
+			stmt.setString(6, usuarioEditado.getTelefone());
 			stmt.setBoolean(7, usuarioEditado.isAdministrador());
 			stmt.setBoolean(8, usuarioEditado.isAtivo());
 			
@@ -118,8 +118,8 @@ public class UsuarioRepository {
 				usuario.setSenha(resultado.getString("SENHA"));
 				usuario.setCpf(resultado.getString("CPF"));
 				usuario.setData_nascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
-				usuario.setTelefone(resultado.getInt("TELEFONE")); 
-				usuario.setAdministrador(resultado.getBoolean("ADMINISTRADOR"));
+				usuario.setTelefone(resultado.getString("TELEFONE")); 
+				usuario.setAdministrador(resultado.getBoolean("ADM"));
 				usuario.setAtivo(resultado.getBoolean("ATIVO"));
 				usuario.setEnderecos(enderecoRepository.consultarTodosPorIdUsuario(resultado.getInt("ID")));
 			}
@@ -170,7 +170,7 @@ public class UsuarioRepository {
 		usuario.setSenha(resultado.getString("SENHA"));
 		usuario.setCpf(resultado.getString("CPF"));
 		usuario.setData_nascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
-		usuario.setTelefone(resultado.getInt("TELEFONE")); 
+		usuario.setTelefone(resultado.getString("TELEFONE")); 
 		usuario.setAdministrador(resultado.getBoolean("ADM"));
 		usuario.setAtivo(resultado.getBoolean("ATIVO"));
 		usuario.setEnderecos(enderecoRepository.consultarTodosPorIdUsuario(resultado.getInt("ID")));
@@ -188,7 +188,9 @@ public class UsuarioRepository {
 		
 		try {
 			ResultSet resultado = stmt.executeQuery(query);
-			cpfJaUtilizado = (resultado.getInt(1) > 0);
+			if(resultado.next()){
+				cpfJaUtilizado = (resultado.getInt(1) > 0);
+			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar CPF. Causa: " + e.getMessage());
 		}

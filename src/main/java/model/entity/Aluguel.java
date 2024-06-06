@@ -13,6 +13,7 @@ public class Aluguel {
 	private Date dataDevDefinitiva;
 	private double valorTotal;
 	private Frete frete;
+	private int distancia;
 	
 	
 	public Aluguel() {
@@ -22,7 +23,7 @@ public class Aluguel {
 
 
 	public Aluguel(int id, Usuario usuario, List<Item> itens, Date dataAluguel, Date dataDevolucao, Date dataDevDefinitiva,
-			double valorTotal, Frete frete) {
+			double valorTotal, Frete frete, int distancia) {
 		super();
 		this.id = id;
 		this.usuario = usuario;
@@ -32,6 +33,7 @@ public class Aluguel {
 		this.dataDevDefinitiva = dataDevDefinitiva;
 		this.valorTotal = valorTotal;
 		this.frete = frete;
+		this.distancia = distancia;
 	}
 
 	
@@ -112,6 +114,16 @@ public class Aluguel {
 
 	public void setFrete(Frete frete) {
 		this.frete = frete;
+	}
+
+
+	public int getDistancia() {
+		return distancia;
+	}
+
+
+	public void setDistancia(int distancia) {
+		this.distancia = distancia;
 	}
 
 

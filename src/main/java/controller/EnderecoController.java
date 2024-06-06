@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import exception.AlugueisException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -21,7 +22,7 @@ public class EnderecoController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Endereco salvar(Endereco novoEndereco) {
+	public Endereco salvar(Endereco novoEndereco) throws AlugueisException {
 		return enderecoService.salvar(novoEndereco);
 	}
 	
@@ -36,7 +37,7 @@ public class EnderecoController {
 	@Path("/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar(Endereco enderecoAlterado){
+	public boolean alterar(Endereco enderecoAlterado) throws AlugueisException{
 		return enderecoService.alterar(enderecoAlterado);
 	}
 	

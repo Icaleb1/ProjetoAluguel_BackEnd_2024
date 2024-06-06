@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import exception.AlugueisException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -23,7 +24,7 @@ public class BrinquedoController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Brinquedo salvar(Brinquedo novoBrinquedo) {
+	public Brinquedo salvar(Brinquedo novoBrinquedo) throws AlugueisException {
 		return brinquedoService.salvar(novoBrinquedo);
 	}
 	
@@ -38,7 +39,7 @@ public class BrinquedoController {
 	@Path("/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar(Brinquedo brinquedoAlterado){
+	public boolean alterar(Brinquedo brinquedoAlterado) throws AlugueisException{
 		return brinquedoService.alterar(brinquedoAlterado);
 	}
 	

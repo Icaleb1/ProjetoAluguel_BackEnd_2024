@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import exception.AlugueisException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -24,7 +25,7 @@ public class FreteController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Frete salvar(Frete novoFrete) {
+	public Frete salvar(Frete novoFrete) throws AlugueisException {
 		return freteService.salvar(novoFrete);
 	}
 	
@@ -39,7 +40,7 @@ public class FreteController {
 	@Path("/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar(Frete freteAlterado){
+	public boolean alterar(Frete freteAlterado) throws AlugueisException{
 		return freteService.alterar(freteAlterado);
 	}
 	

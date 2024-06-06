@@ -13,22 +13,24 @@ import model.entity.Endereco;
 public class EnderecoRepository{
 
 	public Endereco salvar(Endereco novoEndereco) {
-		String sql = " INSERT INTO db_camax.endereco (id_usuario, bairro, cidade, complemento, "
+		String sql = " INSERT INTO db_camax.endereco (nome, principal, id_usuario, bairro, cidade, complemento, "
 				   + "		               estado, lote, referencias, cep, numero) "
-				   + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+				   + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 		Connection conexao = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		
 		try {
-			stmt.setInt(1, novoEndereco.getIdUsuario());
-			stmt.setString(2, novoEndereco.getBairro());
-			stmt.setString(3, novoEndereco.getCidade());
-			stmt.setString(4, novoEndereco.getComplemento());
-			stmt.setString(5, novoEndereco.getEstado());
-			stmt.setString(6, novoEndereco.getLote());
-			stmt.setString(7, novoEndereco.getReferencia());
-			stmt.setInt(8, novoEndereco.getCep());
-			stmt.setInt(9, novoEndereco.getNumero());
+			stmt.setString(1, novoEndereco.getNome());
+			stmt.setBoolean(2, novoEndereco.isPrincipal());
+			stmt.setInt(3, novoEndereco.getIdUsuario());
+			stmt.setString(4, novoEndereco.getBairro());
+			stmt.setString(5, novoEndereco.getCidade());
+			stmt.setString(6, novoEndereco.getComplemento());
+			stmt.setString(7, novoEndereco.getEstado());
+			stmt.setString(8, novoEndereco.getLote());
+			stmt.setString(9, novoEndereco.getReferencia());
+			stmt.setInt(10, novoEndereco.getCep());
+			stmt.setInt(11, novoEndereco.getNumero());
 			
 			stmt.execute();
 			ResultSet resultado = stmt.getGeneratedKeys();
@@ -63,26 +65,28 @@ public class EnderecoRepository{
 	}
 
 
-	public boolean alterar(Endereco EnderecoEditado) {
+	public boolean alterar(Endereco enderecoEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.endereco "
-				     + " SET id_usuario=?, bairro=?, cidade=?, complemento=?, "
+				     + " SET nome=?, principal=?, id_usuario=?, bairro=?, cidade=?, complemento=?, "
 				     + " estado=?, lote=?, referencias=?, cep=?, numero=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
-			stmt.setInt(1, EnderecoEditado.getIdUsuario());
-			stmt.setString(2, EnderecoEditado.getBairro());
-			stmt.setString(3, EnderecoEditado.getCidade());
-			stmt.setString(4, EnderecoEditado.getComplemento());
-			stmt.setString(5, EnderecoEditado.getEstado());
-			stmt.setString(6, EnderecoEditado.getLote());
-			stmt.setString(7, EnderecoEditado.getReferencia());
-			stmt.setInt(8, EnderecoEditado.getCep());
-			stmt.setInt(9, EnderecoEditado.getNumero());
+			stmt.setString(1, enderecoEditado.getNome());
+			stmt.setBoolean(2, enderecoEditado.isPrincipal());
+			stmt.setInt(3, enderecoEditado.getIdUsuario());
+			stmt.setString(4, enderecoEditado.getBairro());
+			stmt.setString(5, enderecoEditado.getCidade());
+			stmt.setString(6, enderecoEditado.getComplemento());
+			stmt.setString(7, enderecoEditado.getEstado());
+			stmt.setString(8, enderecoEditado.getLote());
+			stmt.setString(9, enderecoEditado.getReferencia());
+			stmt.setInt(10, enderecoEditado.getCep());
+			stmt.setInt(11, enderecoEditado.getNumero());
 			
-			stmt.setInt(10, EnderecoEditado.getId());
+			stmt.setInt(12, enderecoEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar endereço!");
@@ -108,6 +112,8 @@ public class EnderecoRepository{
 			if(resultado.next()){
 				endereco = new Endereco();
 				endereco.setId(resultado.getInt("ID"));
+				endereco.setNome(resultado.getString("NOME"));
+				endereco.setPrincipal(resultado.getBoolean("PRINCIPAL"));
 				endereco.setIdUsuario(resultado.getInt("ID_USUARIO"));
 				endereco.setBairro(resultado.getString("BAIRRO"));
 				endereco.setCidade(resultado.getString("CIDADE"));
@@ -159,6 +165,8 @@ public class EnderecoRepository{
 	private Endereco construirDoResultSet(ResultSet resultado) throws SQLException {
 		Endereco endereco = new Endereco();
 		endereco.setId(resultado.getInt("ID"));
+		endereco.setNome(resultado.getString("NOME"));
+		endereco.setPrincipal(resultado.getBoolean("PRINCIPAL"));
 		endereco.setIdUsuario(resultado.getInt("ID_USUARIO"));
 		endereco.setBairro(resultado.getString("BAIRRO"));
 		endereco.setCidade(resultado.getString("CIDADE"));
