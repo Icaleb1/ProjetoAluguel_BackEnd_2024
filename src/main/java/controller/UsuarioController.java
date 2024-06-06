@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 
+import exception.AlugueisException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -23,7 +24,7 @@ public class UsuarioController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Usuario salvar(Usuario novoUsuario) {
+	public Usuario salvar(Usuario novoUsuario) throws AlugueisException {
 		return usuarioService.salvar(novoUsuario);
 	}
 	
@@ -38,7 +39,7 @@ public class UsuarioController {
 	@Path("/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar(Usuario usuarioAlterado){
+	public boolean alterar(Usuario usuarioAlterado) throws AlugueisException{
 		return usuarioService.alterar(usuarioAlterado);
 	}
 	

@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 
 import model.entity.Usuario;
@@ -193,6 +195,15 @@ public class UsuarioRepository {
 		
 		return cpfJaUtilizado;
 	}
+	public boolean idadeInválida(LocalDate dataNascimento) {
+        // Calcular a idade
+        LocalDate hoje = LocalDate.now();
+        Period periodo = Period.between(dataNascimento, hoje);
+        int idade = periodo.getYears();
 
+        // Verificar se a idade é menor que 18
+        return idade < 18;
+    }
+	
 	
 }
