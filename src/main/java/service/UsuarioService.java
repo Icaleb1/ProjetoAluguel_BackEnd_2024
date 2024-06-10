@@ -1,5 +1,6 @@
 package service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import exception.AlugueisException;
@@ -28,6 +29,11 @@ public class UsuarioService {
 		return usuarioRepository.alterar(usuarioEditado);
 	}
 	
+		public boolean desativar(int idUsuarioDesativado) throws AlugueisException {
+			return usuarioRepository.desativar(idUsuarioDesativado);
+		}
+		
+		
 	public Usuario consultarPorId(int id) {
 		return usuarioRepository.consultarPorId(id);
 	}

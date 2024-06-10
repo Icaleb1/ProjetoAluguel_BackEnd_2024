@@ -98,6 +98,23 @@ public class UsuarioRepository {
 		return alterou;
 	}
 
+	public boolean desativar(int idUsuarioDesativado) {
+		  boolean desativou = false;
+		  String query = "UPDATE db_camax.usuario SET ativo=false WHERE id=?";
+		  Connection conn = Banco.getConnection();
+		  PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
+		  try {
+		    stmt.setInt(1, idUsuarioDesativado);
+		    desativou = stmt.executeUpdate() > 0;
+		  } catch (SQLException erro) {
+		    System.out.println("Erro ao desativar usuário!");
+		    System.out.println("Erro: " + erro.getMessage());
+		  } finally {
+		    Banco.closeStatement(stmt);
+		    Banco.closeConnection(conn);
+		  }
+		  return desativou;
+	}
 
 	public Usuario consultarPorId(int id) {
 		Connection conn = Banco.getConnection();

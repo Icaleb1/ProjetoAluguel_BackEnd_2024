@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import exception.AlugueisException;
@@ -41,6 +42,14 @@ public class UsuarioController {
 	@Produces(MediaType.TEXT_PLAIN)
 	public boolean alterar(Usuario usuarioAlterado) throws AlugueisException{
 		return usuarioService.alterar(usuarioAlterado);
+	}
+	
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public boolean desativar(@PathParam("id") int idUsuarioDesativado) throws AlugueisException{
+		return usuarioService.desativar(idUsuarioDesativado);
 	}
 	
 	@GET

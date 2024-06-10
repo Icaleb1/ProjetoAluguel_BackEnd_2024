@@ -1,17 +1,22 @@
-package service;
+ package service;
 
 import java.util.List;
 
 import exception.AlugueisException;
 import model.entity.Aluguel;
+import model.entity.Item;
 import model.entity.Usuario;
 import model.repository.AluguelRepository;
+import model.repository.ItemRepository;
 
 public class AluguelService {
 private AluguelRepository aluguelRepository = new AluguelRepository();
+private ItemRepository itemRepository = new ItemRepository();
 	
 	public Aluguel salvar(Aluguel novoAluguel) throws AlugueisException {
 		validarCamposObrigatorios(novoAluguel);
+		atualizarEstoque(novoAluguel);
+		alugar(novoAluguel);
 		return aluguelRepository.salvar(novoAluguel);
 	}
 	
@@ -62,4 +67,15 @@ private AluguelRepository aluguelRepository = new AluguelRepository();
 	}
 
 
+	  private void alugar(Aluguel aluguel) {
+	        List<Item> itens = itemRepository.consultarTodosPorIdAluguel(aluguel.getId());
+
+	        for (Item item : itens) {
+	            itemRepository.alugar(item.getId());
+	        }
+	    }
+	
+	private void atualizarEstoque(Aluguel aluguelAtualizado) throws AlugueisException {
+
+	}
 }

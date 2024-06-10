@@ -146,8 +146,32 @@ public class BrinquedoRepository {
 		return brinquedos;
 	}
 
+    public boolean atualizarEstoque(int idBrinquedo, int novaQuantidade) {
+        boolean atualizou = false;
+        String query = "UPDATE db_camax.brinquedo SET qtd_em_estoque = ? WHERE id = ?";
+        Connection conn = Banco.getConnection();
+        PreparedStatement stmt = Banco.getPreparedStatement(conn, query);
 
+        try {
+            stmt.setInt(1, novaQuantidade);
+            stmt.setInt(2, idBrinquedo);
 
+            if (stmt.executeUpdate() > 0) {
+                atualizou = true;
+            }
+        } catch (SQLException erro) {
+            System.out.println("Erro ao atualizar estoque do brinquedo com ID: " + idBrinquedo);
+            System.out.println("Erro: " + erro.getMessage());
+        } finally {
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+
+        return atualizou;
+    }
 }
+
+
+
 
 

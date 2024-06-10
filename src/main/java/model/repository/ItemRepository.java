@@ -80,6 +80,42 @@ public class ItemRepository {
 		return alterou;
 	}
 
+	public boolean desalugar(int idItemDesalugar) {
+		  boolean desalugar = false;
+		  String query = "UPDATE db_camax.item SET alugado=false WHERE id=?";
+		  Connection conn = Banco.getConnection();
+		  PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
+		  try {
+		    stmt.setInt(1, idItemDesalugar);
+		    desalugar = stmt.executeUpdate() > 0;
+		  } catch (SQLException erro) {
+		    System.out.println("Erro ao desalugar item!");
+		    System.out.println("Erro: " + erro.getMessage());
+		  } finally {
+		    Banco.closeStatement(stmt);
+		    Banco.closeConnection(conn);
+		  }
+		  return desalugar;
+	}
+	
+	public boolean alugar(int idItemAlugado) {
+		  boolean alugado = false;
+		  String query = "UPDATE db_camax.item SET alugado=true WHERE id=?";
+		  Connection conn = Banco.getConnection();
+		  PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
+		  try {
+		    stmt.setInt(1, idItemAlugado);
+		    alugado = stmt.executeUpdate() > 0;
+		  } catch (SQLException erro) {
+		    System.out.println("Erro ao alugar item!");
+		    System.out.println("Erro: " + erro.getMessage());
+		  } finally {
+		    Banco.closeStatement(stmt);
+		    Banco.closeConnection(conn);
+		  }
+		  return alugado;
+	}
+	
 	public Item consultarPorId(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -172,4 +208,31 @@ public class ItemRepository {
 		}
 		return items;
 	}
+
+    public int contarItensPorBrinquedo(int idBrinquedo) {
+        int quantidade = 0;
+        String query = "SELECT COUNT(*) AS quantidade FROM db_camax.item WHERE id_brinquedo = ? AND alugado = false";
+        Connection conn = Banco.getConnection();
+        PreparedStatement psmt = Banco.getPreparedStatement(conn, query);
+
+        try {
+            psmt.setInt(1, idBrinquedo);
+            ResultSet resultado = psmt.executeQuery();
+
+            if (resultado.next()) {
+                quantidade = resultado.getInt("quantidade");
+            }
+        } catch (SQLException erro) {
+            System.out.println("Erro ao contar itens por brinquedo");
+            System.out.println("Erro: " + erro.getMessage());
+        } finally {
+            Banco.closePreparedStatement(psmt);
+            Banco.closeConnection(conn);
+        }
+
+        return quantidade;
+    }
+
+
+
 }
