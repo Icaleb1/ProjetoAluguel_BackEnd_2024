@@ -13,7 +13,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Brinquedo;
-import model.entity.Usuario;
+import model.entity.seletores.BrinquedoSeletor;
 import service.BrinquedoService;
 
 @Path("/brinquedo")
@@ -21,6 +21,14 @@ public class BrinquedoController {
 	BrinquedoService brinquedoService = new BrinquedoService();
 	
 
+	@POST
+	@Path("/filtro")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Brinquedo> consultarComFiltros(BrinquedoSeletor seletor){
+		 return brinquedoService.consultarComFiltros(seletor);
+	}
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.entity.Brinquedo;
+import model.entity.seletores.BrinquedoSeletor;
 
 public class BrinquedoRepository {
 	
@@ -100,7 +101,7 @@ public class BrinquedoRepository {
 				brinquedo.setId(resultado.getInt("ID"));
 				brinquedo.setNome(resultado.getString("NOME"));
 				brinquedo.setDescricao(resultado.getString("DESCRICAO"));
-				brinquedo.setQuantEstoque(resultado.getInt("QTD_EM_ESTOQUE"));
+				brinquedo.setQuantEstoque(verificarQuantidadeNaoAlugada(resultado.getInt("ID")));
 				brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
 			}
 		} catch (SQLException erro){
@@ -130,7 +131,7 @@ public class BrinquedoRepository {
 				brinquedo.setId(resultado.getInt("ID"));
 				brinquedo.setNome(resultado.getString("NOME"));
 				brinquedo.setDescricao(resultado.getString("DESCRICAO"));
-				brinquedo.setQuantEstoque(resultado.getInt("QTD_EM_ESTOQUE"));
+				brinquedo.setQuantEstoque(verificarQuantidadeNaoAlugada(resultado.getInt("ID")));
 				brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
 				brinquedos.add(brinquedo);
 			}
@@ -169,6 +170,88 @@ public class BrinquedoRepository {
 
         return atualizou;
     }
+
+    public int verificarQuantidadeNaoAlugada(int idBrinquedo) {
+        int quantidadeNaoAlugada = 0;
+        String query = "SELECT COUNT(*) AS qtd_nao_alugada FROM db_camax.ITEM WHERE ID_BRINQUEDO = ? AND ALUGADO = false";
+        
+        Connection conn = Banco.getConnection();
+        PreparedStatement stmt = Banco.getPreparedStatement(conn, query);
+        ResultSet resultado = null;
+        
+        try {
+            stmt.setInt(1, idBrinquedo);
+            resultado = stmt.executeQuery();
+            
+            if (resultado.next()) {
+                quantidadeNaoAlugada = resultado.getInt("qtd_nao_alugada");
+            }
+        } catch (SQLException erro) {
+            System.out.println("Erro ao verificar a quantidade não alugada do brinquedo com ID: " + idBrinquedo);
+            System.out.println("Erro: " + erro.getMessage());
+        } finally {
+            Banco.closeResultSet(resultado);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+        
+        return quantidadeNaoAlugada;
+    }
+
+    public ArrayList<Brinquedo> consultarComFiltro(BrinquedoSeletor seletor){
+		ArrayList<Brinquedo> brinquedos = new ArrayList<>();
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		String query = " select * from db_camax.brinquedo";  
+		boolean primeiro = true;
+		if (seletor.getNomeBrinquedo() != null) {
+			if (primeiro) {
+				query += " WHERE ";
+			}else {
+				query += " AND ";
+			}
+			query += "upper(brinquedo.nome) LIKE UPPER('%" + seletor.getNomeBrinquedo() + "%')";
+			primeiro = false;
+		}
+		
+		if(seletor.getValorMinimo() != 0 & seletor.getValorMáximo() != 0) {
+			if(primeiro) {
+				query += " WHERE ";
+			}else {
+				query += " AND ";
+			}
+			query += " valor_diaria between '" + seletor.getValorMinimo() + "' and '" + seletor.getValorMáximo() + "';";
+			primeiro = false;
+		}
+
+		try{
+			resultado = stmt.executeQuery(query);
+			BrinquedoRepository brinquedoRepository = new BrinquedoRepository();
+			while(resultado.next()){
+				Brinquedo brinquedo = new Brinquedo();
+				brinquedo.setId(Integer.parseInt(resultado.getString("ID")));
+				brinquedo.setNome(resultado.getString("NOME"));
+				brinquedo.setDescricao(resultado.getString("DESCRICAO"));
+				brinquedo.setQuantEstoque(verificarQuantidadeNaoAlugada(resultado.getInt("ID")));
+				brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
+				brinquedos.add(brinquedo);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar todas as brinquedos");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return brinquedos;
+		
+	}
+
+
+
 }
 
 

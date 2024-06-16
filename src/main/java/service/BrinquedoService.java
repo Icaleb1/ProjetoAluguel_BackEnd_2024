@@ -4,7 +4,7 @@ import java.util.List;
 
 import exception.AlugueisException;
 import model.entity.Brinquedo;
-import model.entity.Usuario;
+import model.entity.seletores.BrinquedoSeletor;
 import model.repository.BrinquedoRepository;
 
 public class BrinquedoService {
@@ -32,6 +32,10 @@ private BrinquedoRepository brinquedoRepository = new BrinquedoRepository();
 		return brinquedoRepository.consultarTodos();
 	}
 	
+	public List<Brinquedo> consultarComFiltros(BrinquedoSeletor seletor) {
+		return brinquedoRepository.consultarComFiltro(seletor);
+	}
+			
 	private void validarCamposObrigatorios(Brinquedo brinquedoValidado) throws AlugueisException {
 		String mensagemValidacao = "";
 		
@@ -55,5 +59,6 @@ private BrinquedoRepository brinquedoRepository = new BrinquedoRepository();
 
 	}
 
+	
 
 }

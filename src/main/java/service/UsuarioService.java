@@ -5,17 +5,24 @@ import java.util.List;
 
 import exception.AlugueisException;
 import model.entity.Usuario;
+import model.repository.CarrinhoRepository;
 import model.repository.UsuarioRepository;
 
 public class UsuarioService {
 	
 	private UsuarioRepository usuarioRepository = new UsuarioRepository();
+	private CarrinhoRepository carrinhoRepository = new CarrinhoRepository();
 	
 	public Usuario salvar(Usuario novoUsuario) throws AlugueisException {
 		validarCpf(novoUsuario);
 		validarCamposObrigatorios(novoUsuario);
 		validarIdade(novoUsuario);
-		return usuarioRepository.salvar(novoUsuario);
+		
+		Usuario usuarioSalvo = usuarioRepository.salvar(novoUsuario);
+
+        carrinhoRepository.criarCarrinho(usuarioSalvo.getId());
+
+        return usuarioSalvo;
 	}
 	
 	public boolean exluir(int id) {
@@ -81,5 +88,8 @@ public class UsuarioService {
 		if(usuarioRepository.idadeInválida(novoUsuario.getData_nascimento())) {
 			throw new AlugueisException("Data de nascimento" + novoUsuario.getData_nascimento() + " inválida!");
 		}
-		}
+	}
+
+	
+	
 }
