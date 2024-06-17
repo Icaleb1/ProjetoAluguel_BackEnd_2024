@@ -173,7 +173,8 @@ public class BrinquedoRepository {
 
     public int verificarQuantidadeNaoAlugada(int idBrinquedo) {
         int quantidadeNaoAlugada = 0;
-        String query = "SELECT COUNT(*) AS qtd_nao_alugada FROM db_camax.ITEM WHERE ID_BRINQUEDO = ? AND ALUGADO = false";
+        String query = "SELECT COUNT(*) AS qtd_nao_alugada FROM db_camax.ITEM WHERE ID_BRINQUEDO = ? "
+        		+ "AND ALUGADO = false";
         
         Connection conn = Banco.getConnection();
         PreparedStatement stmt = Banco.getPreparedStatement(conn, query);
@@ -215,14 +216,14 @@ public class BrinquedoRepository {
 			query += "upper(brinquedo.nome) LIKE UPPER('%" + seletor.getNomeBrinquedo() + "%')";
 			primeiro = false;
 		}
-		
-		if(seletor.getValorMinimo() != 0 & seletor.getValorMáximo() != 0) {
+		//TODO Implementar os casos de somente com um valor preenchido;
+		if(seletor.getValorMinimo() != null && seletor.getValorMaximo() != null) {
 			if(primeiro) {
 				query += " WHERE ";
 			}else {
 				query += " AND ";
 			}
-			query += " valor_diaria between '" + seletor.getValorMinimo() + "' and '" + seletor.getValorMáximo() + "';";
+			query += " valor_diaria between '" + seletor.getValorMinimo() + "' and '" + seletor.getValorMaximo() + "';";
 			primeiro = false;
 		}
 

@@ -3,14 +3,14 @@ package model.entity.seletores;
 public class BrinquedoSeletor extends BaseSeletor{
 	
 	private String nomeBrinquedo;
-	private double valorMinimo;
-	private double valorMáximo;
+	private Double valorMinimo;
+	private Double valorMaximo;
 	
-	public BrinquedoSeletor(String nomeBrinquedo, double valorMinimo, double valorMáximo) {
+	public BrinquedoSeletor(String nomeBrinquedo, Double valorMinimo, Double valorMáximo) {
 		super();
 		this.nomeBrinquedo = nomeBrinquedo;
 		this.valorMinimo = valorMinimo;
-		this.valorMáximo = valorMáximo;
+		this.valorMaximo = valorMáximo;
 	}
 
 	public BrinquedoSeletor() {
@@ -26,20 +26,20 @@ public class BrinquedoSeletor extends BaseSeletor{
 		this.nomeBrinquedo = nomeBrinquedo;
 	}
 
-	public double getValorMinimo() {
+	public Double getValorMinimo() {
 		return valorMinimo;
 	}
 
-	public void setValorMinimo(double valorMinimo) {
+	public void setValorMinimo(Double valorMinimo) {
 		this.valorMinimo = valorMinimo;
 	}
 
-	public double getValorMáximo() {
-		return valorMáximo;
+	public Double getValorMaximo() {
+		return valorMaximo;
 	}
 
-	public void setValorMáximo(double valorMáximo) {
-		this.valorMáximo = valorMáximo;
+	public void setValorMaximo(Double valorMaximo) {
+		this.valorMaximo = valorMaximo;
 	}
 	
 	

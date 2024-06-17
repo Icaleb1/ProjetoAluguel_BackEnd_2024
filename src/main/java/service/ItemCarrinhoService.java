@@ -11,6 +11,10 @@ public class ItemCarrinhoService {
 		return carrinhoRepository.adicionarItemCarrinho(itemCarrinho);
 	}
 	
+	public boolean removerItem(int idItemCarrinho) {
+		return carrinhoRepository.removerItemCarrinho(idItemCarrinho);
+	}
+	
 	
 
 }

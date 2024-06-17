@@ -34,5 +34,26 @@ public class ItemCarrinhoRepository {
 		return itemCarrinho;
     }
 	
+	
+	public boolean removerItemCarrinho(int idItemCarrinho) {
+	    String query = "DELETE FROM db_camax.ITEM_CARRINHO WHERE ID = ?";
+	    Connection conn = Banco.getConnection();
+	    PreparedStatement psmt = Banco.getPreparedStatement(conn, query);
+
+	    try {
+	        psmt.setInt(1, idItemCarrinho);
+	        
+	        int rowsAffected = psmt.executeUpdate();
+	        return rowsAffected > 0;
+	    } catch (SQLException e) {
+	        System.out.println("Erro ao remover brinquedo do carrinho: " + e.getMessage());
+	        return false;
+	    } finally {
+	        Banco.closePreparedStatement(psmt);
+	        Banco.closeConnection(conn);
+	    }
+	}
+
+	
 
 }
