@@ -45,9 +45,6 @@ private BrinquedoRepository brinquedoRepository = new BrinquedoRepository();
 		if(brinquedoValidado.getDescricao() == null || brinquedoValidado.getDescricao().isEmpty()) {
 			mensagemValidacao = "Descrição obrigatória!";
 		}
-		if (brinquedoValidado.getQuantEstoque() == 0) {
-			mensagemValidacao = "Estoque é obrigatório!";		
-		}
 		if (brinquedoValidado.getValorDiaria() == 0) {
 			mensagemValidacao = "Valor da diária é obrigatória!";
 		}
