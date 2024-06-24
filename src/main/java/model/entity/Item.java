@@ -6,7 +6,7 @@ public class Item {
 	private int id;
 	private int id_Aluguel;
 	private Brinquedo brinquedo;
-	private boolean alugado;
+	private boolean disponivel;
 	
 	
 	public Item() {
@@ -15,12 +15,12 @@ public class Item {
 	}
 
 
-	public Item(int id, int id_Aluguel, Brinquedo brinquedo, boolean alugado) {
+	public Item(int id, int id_Aluguel, Brinquedo brinquedo, boolean disponivel) {
 		super();
 		this.id = id;
 		this.id_Aluguel = id_Aluguel;
 		this.brinquedo = brinquedo;
-		this.alugado = alugado;
+		this.disponivel = disponivel;
 	}
 
 
@@ -44,14 +44,6 @@ public class Item {
 	}
 
 
-	public boolean isAlugado() {
-		return alugado;
-	}
-
-
-	public void setAlugado(boolean alugado) {
-		this.alugado = alugado;
-	}
 
 
 	public int getId_Aluguel() {
@@ -61,6 +53,16 @@ public class Item {
 
 	public void setId_Aluguel(int id_Aluguel) {
 		this.id_Aluguel = id_Aluguel;
+	}
+
+
+	public boolean isDisponivel() {
+		return disponivel;
+	}
+
+
+	public void setDisponivel(boolean disponivel) {
+		this.disponivel = disponivel;
 	}
 
 

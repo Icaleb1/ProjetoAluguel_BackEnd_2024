@@ -20,7 +20,7 @@ public class ItemRepository {
 		try {
 			psmt.setInt(1, novoItem.getId_Aluguel());
 			psmt.setInt(2, novoItem.getBrinquedo().getId());
-			psmt.setBoolean(3, novoItem.isAlugado());			
+			psmt.setBoolean(3, novoItem.isDisponivel());			
 			psmt.execute();
 			ResultSet resultado = psmt.getGeneratedKeys();
 			if (resultado.next()) {
@@ -66,7 +66,7 @@ public class ItemRepository {
 		try {
 			stmt.setInt(1, itemEditado.getId_Aluguel());
 			stmt.setInt(2, itemEditado.getBrinquedo().getId());
-			stmt.setBoolean(3, itemEditado.isAlugado());
+			stmt.setBoolean(3, itemEditado.isDisponivel());
 			
 			stmt.setInt(4, itemEditado.getId());
 			alterou = stmt.executeUpdate() > 0;

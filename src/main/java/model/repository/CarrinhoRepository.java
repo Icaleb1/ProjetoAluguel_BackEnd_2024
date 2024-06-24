@@ -57,7 +57,7 @@ public class CarrinhoRepository {
 	        Carrinho carrinho = new Carrinho();
 
 	        String query = "SELECT c.ID, c.ID_USUARIO, ic.ID AS ITEM_ID, ic.ID_BRINQUEDO, ic.QUANTIDADE, " +
-	                       "b.ID AS BRINQUEDO_ID, b.NOME, b.DESCRICAO, b.QTD_EM_ESTOQUE, b.VALOR_DIARIA " +
+	                       "b.ID AS BRINQUEDO_ID, b.NOME, b.DESCRICAO, b.ESTOQUE_DISPONIVEL, b.ESTOQUE_TOTAL, b.VALOR_DIARIA " +
 	                       "FROM db_camax.CARRINHO c " +
 	                       "LEFT JOIN db_camax.ITEM_CARRINHO ic ON c.ID = ic.ID_CARRINHO " +
 	                       "LEFT JOIN db_camax.BRINQUEDO b ON ic.ID_BRINQUEDO = b.ID " +
@@ -81,7 +81,8 @@ public class CarrinhoRepository {
 	                    brinquedo.setId(resultado.getInt("BRINQUEDO_ID"));
 	                    brinquedo.setNome(resultado.getString("NOME"));
 	                    brinquedo.setDescricao(resultado.getString("DESCRICAO"));
-	                    brinquedo.setQuantEstoque(resultado.getInt("QTD_EM_ESTOQUE"));
+	                    brinquedo.setEstoqueDisponivel(resultado.getInt("ESTOQUE_DISPONIVEL"));
+	                    brinquedo.setEstoqueTotal(resultado.getInt("ESTOQUE_TOTAL"));
 	                    brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
 
 	                    ItemCarrinho itemCarrinho = new ItemCarrinho();
