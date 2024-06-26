@@ -52,6 +52,12 @@ public class EnderecoController {
 	public List<Endereco> consultarTodas(){
 		return enderecoService.consultarTodos();
 	}
+	
+	@GET
+	@Path("/todos/{idUsuario}")
+	public List<Endereco> consultarTodas(@PathParam("idUsuario") int idUsuario){
+		return enderecoService.consultarTodosPorIdUsuario(idUsuario);
+	}
 
 	
 

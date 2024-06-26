@@ -14,20 +14,21 @@ import model.entity.Usuario;
 public class AluguelRepository {
 		
 		public Aluguel salvar(Aluguel novoAluguel) {
-			String query = "INSERT INTO db_camax.aluguel (id_usuario, id_frete, data_aluguel, data_devolucao,"
-					+ " data_devolucao_definitiva, valor_total, distancia) VALUES (?,?,?,?,?,?,?)";
+			String query = "INSERT INTO db_camax.aluguel (id_usuario, id_frete, id_endereco, data_aluguel, data_devolucao,"
+					+ " data_devolucao_definitiva, valores_adicionais, valor_total) VALUES (?,?,?,?,?,?,?,?)";
 			
 			Connection conn = Banco.getConnection();
 			PreparedStatement psmt = Banco.getPreparedStatementWithPk(conn, query);
 			
 			try {
 				psmt.setInt(1, novoAluguel.getUsuario().getId());
-				psmt.setInt(2, novoAluguel.getFrete().getId());		
-				psmt.setDate(3, novoAluguel.getDataAluguel());
-				psmt.setDate(4, novoAluguel.getDataDevolucao());
-				psmt.setDate(5, novoAluguel.getDataDevDefinitiva());
-				psmt.setDouble(6, novoAluguel.getValorTotal());
-				psmt.setInt(7, novoAluguel.getDistancia());
+				psmt.setInt(2, novoAluguel.getFrete().getId());	
+				psmt.setInt(3, novoAluguel.getEnderecoDeEntrega().getId());
+				psmt.setDate(4, novoAluguel.getDataAluguel());
+				psmt.setDate(5, novoAluguel.getDataDevolucao());
+				psmt.setDate(6, novoAluguel.getDataDevDefinitiva());
+				psmt.setDouble(7, novoAluguel.getValoresAdicionais());
+				psmt.setDouble(8, novoAluguel.getValorTotal());
 				psmt.execute();
 				ResultSet resultado = psmt.getGeneratedKeys();
 				if (resultado.next()) {
@@ -66,21 +67,22 @@ public class AluguelRepository {
 		public boolean alterar(Aluguel aluguelEditado) {
 			boolean alterou = false;
 			String query = " UPDATE db_camax.aluguel "
-					     + " SET id_usuario=?, id_frete=?, data_aluguel=?, data_devolucao=?,"
-					     + " data_devolucao_definitiva=?, valor_total=?, distancia=?"
+					     + " SET id_usuario=?, id_frete=?, id_endereco=?, data_aluguel=?, data_devolucao=?,"
+					     + " data_devolucao_definitiva=?, valores_adicionais=?, valor_total=?"
 					     + " WHERE id=? ";
 			Connection conn = Banco.getConnection();
 			PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 			try {
 				stmt.setInt(1, aluguelEditado.getUsuario().getId());
 				stmt.setInt(2, aluguelEditado.getFrete().getId());
-				stmt.setDate(3, aluguelEditado.getDataAluguel());
-				stmt.setDate(4, aluguelEditado.getDataDevolucao());
-				stmt.setDate(5, aluguelEditado.getDataDevDefinitiva());
-				stmt.setDouble(6, aluguelEditado.getValorTotal());
-				stmt.setInt(7, aluguelEditado.getDistancia());
+				stmt.setInt(3, aluguelEditado.getEnderecoDeEntrega().getId());
+				stmt.setDate(4, aluguelEditado.getDataAluguel());
+				stmt.setDate(5, aluguelEditado.getDataDevolucao());
+				stmt.setDate(6, aluguelEditado.getDataDevDefinitiva());
+				stmt.setDouble(7, aluguelEditado.getValoresAdicionais());
+				stmt.setDouble(8, aluguelEditado.getValorTotal());
 				
-				stmt.setInt(8, aluguelEditado.getId());
+				stmt.setInt(9, aluguelEditado.getId());
 				alterou = stmt.executeUpdate() > 0;
 			} catch (SQLException erro) {
 				System.out.println("Erro ao atualizar aluguel ");
@@ -106,18 +108,20 @@ public class AluguelRepository {
 				FreteRepository freteRepository = new FreteRepository();
 				UsuarioRepository usuarioRepository = new UsuarioRepository();
 				ItemRepository itemRepository = new ItemRepository();
+				EnderecoRepository enderecoRepository = new EnderecoRepository();
 				
 				if(resultado.next()){
 					aluguel = new Aluguel();
 					aluguel.setId(resultado.getInt("ID"));
 					aluguel.setFrete(freteRepository.consultarPorId(resultado.getInt("ID_FRETE")));
 					aluguel.setUsuario(usuarioRepository.consultarPorId(resultado.getInt("ID_USUARIO")));
+					aluguel.setEnderecoDeEntrega(enderecoRepository.consultarPorId(resultado.getInt("ID_ENDERECO")));
 					aluguel.setDataAluguel(resultado.getDate("DATA_ALUGUEL"));
 					aluguel.setDataDevolucao(resultado.getDate("DATA_DEVOLUCAO"));
 					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));
+					aluguel.setValoresAdicionais(resultado.getDouble("VALORES_ADICIONAIS"));
 					aluguel.setValorTotal(resultado.getDouble("VALOR_TOTAL"));
 					aluguel.setItens(itemRepository.consultarTodosPorIdAluguel(resultado.getInt("ID")));
-					aluguel.setDistancia(resultado.getInt("DISTANCIA"));
 				}
 				
 			} catch (SQLException erro){
@@ -144,18 +148,20 @@ public class AluguelRepository {
 				FreteRepository freteRepository = new FreteRepository();
 				UsuarioRepository usuarioRepository = new UsuarioRepository();
 				ItemRepository itemRepository = new ItemRepository();
+				EnderecoRepository enderecoRepository = new EnderecoRepository();
 				
 				while(resultado.next()){
 					Aluguel aluguel = new Aluguel();
 					aluguel.setId(resultado.getInt("ID"));
 					aluguel.setFrete(freteRepository.consultarPorId(resultado.getInt("ID_FRETE")));
 					aluguel.setUsuario(usuarioRepository.consultarPorId(resultado.getInt("ID_USUARIO")));
+					aluguel.setEnderecoDeEntrega(enderecoRepository.consultarPorId(resultado.getInt("ID_ENDERECO")));
 					aluguel.setDataAluguel(resultado.getDate("DATA_ALUGUEL"));
 					aluguel.setDataDevolucao(resultado.getDate("DATA_DEVOLUCAO"));
 					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));
+					aluguel.setValoresAdicionais(resultado.getDouble("VALORES_ADICIONAIS"));
 					aluguel.setValorTotal(resultado.getDouble("VALOR_TOTAL"));
 					aluguel.setItens(itemRepository.consultarTodosPorIdAluguel(resultado.getInt("ID")));
-					aluguel.setDistancia(resultado.getInt("DISTANCIA"));
 					alugueis.add(aluguel);
 				}
 			} catch (SQLException erro){

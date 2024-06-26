@@ -11,9 +11,10 @@ public class Aluguel {
 	private Date dataAluguel;
 	private Date dataDevolucao;
 	private Date dataDevDefinitiva;
+	private double valoresAdicionais;
 	private double valorTotal;
+	private Endereco enderecoDeEntrega;
 	private Frete frete;
-	private int distancia;
 	
 	
 	public Aluguel() {
@@ -23,7 +24,7 @@ public class Aluguel {
 
 
 	public Aluguel(int id, Usuario usuario, List<Item> itens, Date dataAluguel, Date dataDevolucao, Date dataDevDefinitiva,
-			double valorTotal, Frete frete, int distancia) {
+			double valorTotal, Frete frete, double valoresAdicionais, Endereco enderecoDeEntrega) {
 		super();
 		this.id = id;
 		this.usuario = usuario;
@@ -31,9 +32,10 @@ public class Aluguel {
 		this.dataAluguel = dataAluguel;
 		this.dataDevolucao = dataDevolucao;
 		this.dataDevDefinitiva = dataDevDefinitiva;
+		this.valoresAdicionais = valoresAdicionais;
 		this.valorTotal = valorTotal;
+		this.enderecoDeEntrega = enderecoDeEntrega;
 		this.frete = frete;
-		this.distancia = distancia;
 	}
 
 	
@@ -117,14 +119,27 @@ public class Aluguel {
 	}
 
 
-	public int getDistancia() {
-		return distancia;
+	public double getValoresAdicionais() {
+		return valoresAdicionais;
 	}
 
 
-	public void setDistancia(int distancia) {
-		this.distancia = distancia;
+	public void setValoresAdicionais(double valoresAdicionais) {
+		this.valoresAdicionais = valoresAdicionais;
 	}
+
+
+	public Endereco getEnderecoDeEntrega() {
+		return enderecoDeEntrega;
+	}
+
+
+	public void setEnderecoDeEntrega(Endereco enderecoDeEntrega) {
+		this.enderecoDeEntrega = enderecoDeEntrega;
+	}
+
+
+	
 
 
 	
