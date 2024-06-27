@@ -1,4 +1,4 @@
-package model.repository;
+	package model.repository;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+
+import com.mysql.cj.util.StringUtils;
 
 import model.entity.Usuario;
 
@@ -34,6 +36,7 @@ public class UsuarioRepository {
 			stmt.setString(6, novoUsuario.getTelefone());
 			stmt.setBoolean(7, novoUsuario.isAdministrador());	
 			stmt.setBoolean(8, novoUsuario.isAtivo());
+			stmt.setString(9,  util.StringUtils.cifrar(novoUsuario.getSenha()));
 			
 			stmt.execute();
 			ResultSet resultado = stmt.getGeneratedKeys();

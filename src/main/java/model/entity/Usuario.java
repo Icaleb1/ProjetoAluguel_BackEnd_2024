@@ -15,6 +15,7 @@ public class Usuario {
 	private boolean administrador;
 	private List<Endereco> enderecos;    
 	private boolean ativo;
+	private String idSessao;
 	
 	
 	public Usuario() {
@@ -24,7 +25,7 @@ public class Usuario {
 
 
 	public Usuario(int id, String nome, String email, String senha, String cpf, LocalDate data_nascimento, String telefone, boolean administrador,
-			List<Endereco> enderecos, boolean ativo) {
+			List<Endereco> enderecos, boolean ativo, String idSessao) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -36,6 +37,7 @@ public class Usuario {
 		this.administrador = administrador;
 		this.enderecos = enderecos;
 		this.ativo = ativo;
+		this.idSessao = idSessao;
 	}
 
 
@@ -136,6 +138,16 @@ public class Usuario {
 
 	public void setData_nascimento(LocalDate data_nascimento) {
 		this.data_nascimento = data_nascimento;
+	}
+
+
+	public String getIdSessao() {
+		return idSessao;
+	}
+
+
+	public void setIdSessao(String idSessao) {
+		this.idSessao = idSessao;
 	}
 	
 	
