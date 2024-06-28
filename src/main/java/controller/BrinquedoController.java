@@ -22,7 +22,7 @@ public class BrinquedoController {
 	
 
 	@POST
-	@Path("/filtro")
+	@Path("/restrito/filtro")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Brinquedo> consultarComFiltros(BrinquedoSeletor seletor){
@@ -38,13 +38,13 @@ public class BrinquedoController {
 	
 
 	@DELETE 
-	@Path("/{id}")
+	@Path("/restrito/{id}")
 	public boolean excluir(@PathParam("id") int id) {
 		return brinquedoService.exluir(id);
 	}
 	
 	@PUT
-	@Path("/atualizar")
+	@Path("/restrito/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public boolean alterar(Brinquedo brinquedoAlterado) throws AlugueisException{

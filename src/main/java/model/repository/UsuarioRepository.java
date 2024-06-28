@@ -1,4 +1,4 @@
-	package model.repository;
+package model.repository;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,9 +10,10 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 
-import com.mysql.cj.util.StringUtils;
-
 import model.entity.Usuario;
+import model.entity.dto.UsuarioDto;
+import util.StringUtils;
+
 
 
 
@@ -30,13 +31,12 @@ public class UsuarioRepository {
 		try {
 			stmt.setString(1, novoUsuario.getNome());
 			stmt.setString(2, novoUsuario.getEmail());
-			stmt.setString(3, novoUsuario.getSenha());
+			stmt.setString(3, util.StringUtils.cifrar(novoUsuario.getSenha()));
 			stmt.setString(4, novoUsuario.getCpf());
 			stmt.setDate(5, Date.valueOf(novoUsuario.getData_nascimento()));
 			stmt.setString(6, novoUsuario.getTelefone());
 			stmt.setBoolean(7, novoUsuario.isAdministrador());	
 			stmt.setBoolean(8, novoUsuario.isAtivo());
-			stmt.setString(9,  util.StringUtils.cifrar(novoUsuario.getSenha()));
 			
 			stmt.execute();
 			ResultSet resultado = stmt.getGeneratedKeys();
@@ -82,7 +82,7 @@ public class UsuarioRepository {
 		try {
 			stmt.setString(1, usuarioEditado.getNome());
 			stmt.setString(2, usuarioEditado.getEmail());
-			stmt.setString(3, usuarioEditado.getSenha());
+			stmt.setString(3, util.StringUtils.cifrar(usuarioEditado.getSenha()));
 			stmt.setString(4, usuarioEditado.getCpf());
 			stmt.setDate(5, Date.valueOf(usuarioEditado.getData_nascimento()));
 			stmt.setString(6, usuarioEditado.getTelefone());
@@ -155,7 +155,6 @@ public class UsuarioRepository {
 		return usuario;
 	}
 
-
 	public ArrayList<Usuario> consultarTodos() {
 		ArrayList<Usuario> usuarios = new ArrayList<>();
 		Connection conn = Banco.getConnection();
@@ -194,6 +193,8 @@ public class UsuarioRepository {
 		usuario.setAdministrador(resultado.getBoolean("ADM"));
 		usuario.setAtivo(resultado.getBoolean("ATIVO"));
 		usuario.setEnderecos(enderecoRepository.consultarTodosPorIdUsuario(resultado.getInt("ID")));
+		usuario.setIdSessao(resultado.getString("ID_SESSAO"));
+		
 		
 		
 		return usuario;
@@ -217,6 +218,7 @@ public class UsuarioRepository {
 		
 		return cpfJaUtilizado;
 	}
+	
 	public boolean idadeInválida(LocalDate dataNascimento) {
         // Calcular a idade
         LocalDate hoje = LocalDate.now();
@@ -227,5 +229,99 @@ public class UsuarioRepository {
         return idade < 18;
     }
 	
+	public Usuario consultarPorLoginSenha(UsuarioDto usuarioDTO) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		Usuario usuario = null;
+		String query = " SELECT * FROM usuario "
+				     + " WHERE email = '" + usuarioDTO.getLogin() + "'"
+				     + " AND senha = '" + StringUtils.cifrar(usuarioDTO.getSenha()) + "'";
+		try{
+			resultado = stmt.executeQuery(query);
+			if(resultado.next()){
+				usuario = this.construirDoResultSet(resultado);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar usuario com login (" + usuarioDTO.getLogin() + ")");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return usuario;
+	}
+
+	public Usuario consultarPorLogin(String login) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		Usuario usuario = new Usuario();
+		String query = " SELECT * FROM usuario "
+				     + " WHERE email = '" + login + "'";
+		try{
+			resultado = stmt.executeQuery(query);
+			if(resultado.next()){
+				usuario = this.construirDoResultSet(resultado);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar jogador com login (" + login + ")");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return usuario;
+	}
+
+	public Usuario consultarPorIdSessao(String idSessao) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		Usuario usuario = new Usuario();
+		String query = " SELECT * FROM usuario "
+				     + " WHERE id_sessao = '" + idSessao + "'";
+		try{
+			resultado = stmt.executeQuery(query);
+			if(resultado.next()){
+				usuario = this.construirDoResultSet(resultado);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar usuario com idSessao (" + idSessao + ")");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return usuario;
+	}
+
 	
+	public boolean alterarIdSessao(Usuario novoUsuario) {
+		boolean alterou = false;
+		String query = " UPDATE usuario "
+					 + " SET   id_sessao=? "
+				     + " WHERE id=?";
+		Connection conn = Banco.getConnection();
+		PreparedStatement pstmt = Banco.getPreparedStatement(conn, query);
+		try {
+			pstmt.setString(1, novoUsuario.getIdSessao());
+			pstmt.setInt(2, novoUsuario.getId());
+			
+			alterou = pstmt.executeUpdate() > 0;
+		} catch (SQLException erro) {
+			System.out.println("Erro ao atualizar idSessao do usuario");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeStatement(pstmt);
+			Banco.closeConnection(conn);
+		}
+		return alterou;
+	}
 }

@@ -40,6 +40,15 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 	 */
 	@Override
 	public Response toResponse(Exception exception) {
+		String json = converterExceptionParaJson(exception);
+
+		return Response.status(Status.BAD_REQUEST)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+				.entity(json)
+				.build();
+	}
+
+	public static String converterExceptionParaJson(Exception exception) {
 		Map<String, String> mapAtributos = new HashMap<String, String>();
 		mapAtributos.put("mensagem", exception.getMessage());
 		
@@ -51,12 +60,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 		
 		//Define o JSON que será retornado
 		Gson gson = new GsonBuilder().create();
-		String json = gson.toJson(mapAtributos);
-
-		return Response.status(Status.BAD_REQUEST)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-				.entity(json)
-				.build();
+		return gson.toJson(mapAtributos);
 	}
-
 }

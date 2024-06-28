@@ -90,6 +90,8 @@ public class UsuarioService {
 		}
 	}
 
-	
+	public Usuario consultarPorIdSessao(String idSessaoNoHeader) {
+		return this.usuarioRepository.consultarPorIdSessao(idSessaoNoHeader);
+	}
 	
 }

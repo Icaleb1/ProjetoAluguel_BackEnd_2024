@@ -16,7 +16,7 @@ import model.entity.Brinquedo;
 import model.entity.Item;
 import service.ItemService;
 
-@Path("/item")
+@Path("/restrito/item")
 public class ItemController {
 	ItemService itemService = new ItemService();
 	

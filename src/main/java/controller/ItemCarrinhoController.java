@@ -15,7 +15,7 @@ import model.entity.ItemCarrinho;
 import model.entity.seletores.BrinquedoSeletor;
 import service.ItemCarrinhoService;
 
-@Path("/itemCarrinho")
+@Path("/restrito/itemCarrinho")
 public class ItemCarrinhoController {
 	ItemCarrinhoService itemCarrinhoService = new ItemCarrinhoService();
 	

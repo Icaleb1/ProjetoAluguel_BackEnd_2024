@@ -16,7 +16,7 @@ import model.entity.Aluguel;
 import model.entity.Brinquedo;
 import service.AluguelService;
 
-@Path("/aluguel")
+@Path("/restrito/aluguel")
 public class AluguelController {
 	AluguelService aluguelService = new AluguelService();
 	

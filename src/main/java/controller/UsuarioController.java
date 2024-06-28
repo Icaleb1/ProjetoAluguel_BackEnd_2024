@@ -31,13 +31,13 @@ public class UsuarioController {
 	
 
 	@DELETE 
-	@Path("/{id}")
+	@Path("/restrito/{id}")
 	public boolean excluir(@PathParam("id") int id) {
 		return usuarioService.exluir(id);
 	}
 	
 	@PUT
-	@Path("/atualizar")
+	@Path("/restrito/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public boolean alterar(Usuario usuarioAlterado) throws AlugueisException{
@@ -45,7 +45,7 @@ public class UsuarioController {
 	}
 	
 	@PUT
-	@Path("/{id}")
+	@Path("/restrito/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public boolean desativar(@PathParam("id") int idUsuarioDesativado) throws AlugueisException{
@@ -53,13 +53,13 @@ public class UsuarioController {
 	}
 	
 	@GET
-	@Path("/{id}")
+	@Path("/restrito/{id}")
 	public Usuario consultarPorId(@PathParam("id") int id){
 		 return usuarioService.consultarPorId(id);
 	}
 	
 	@GET
-	@Path("/todos")
+	@Path("/restrito/todos")
 	public List<Usuario> consultarTodas(){
 		return usuarioService.consultarTodos();
 	}

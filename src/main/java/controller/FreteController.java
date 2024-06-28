@@ -16,7 +16,7 @@ import model.entity.Aluguel;
 import model.entity.Frete;
 import service.FreteService;
 
-@Path("/frete")
+@Path("/restrito/frete")
 public class FreteController {
 	FreteService freteService = new FreteService();
 

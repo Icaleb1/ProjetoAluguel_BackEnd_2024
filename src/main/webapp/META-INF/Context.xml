@@ -13,7 +13,7 @@
 		maxTotal="10" maxIdle="10" maxWaitMillis="10000"
 		username="root" password="2004"
 		driverClassName="com.mysql.cj.jdbc.Driver"
-		url="jdbc:mysql://localhost:3306/controle_vacinas"
+		url="jdbc:mysql://localhost:3306/db_camax"
 	/>
 
 	<!-- 	senha da sala "root" -->
