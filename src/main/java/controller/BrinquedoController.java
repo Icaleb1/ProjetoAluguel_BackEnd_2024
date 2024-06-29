@@ -3,6 +3,7 @@ package controller;
 import java.util.List;
 
 import exception.AlugueisException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -11,18 +12,22 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Brinquedo;
 import model.entity.seletores.BrinquedoSeletor;
 import service.BrinquedoService;
 
-@Path("/brinquedo")
+@Path("/restrito/brinquedo")
 public class BrinquedoController {
 	BrinquedoService brinquedoService = new BrinquedoService();
+
 	
+	@Context
+	private HttpServletRequest request;
 
 	@POST
-	@Path("/restrito/filtro")
+	@Path("/filtro")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Brinquedo> consultarComFiltros(BrinquedoSeletor seletor){
@@ -38,13 +43,13 @@ public class BrinquedoController {
 	
 
 	@DELETE 
-	@Path("/restrito/{id}")
+	@Path("/{id}")
 	public boolean excluir(@PathParam("id") int id) {
 		return brinquedoService.exluir(id);
 	}
 	
 	@PUT
-	@Path("/restrito/atualizar")
+	@Path("/atualizar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public boolean alterar(Brinquedo brinquedoAlterado) throws AlugueisException{

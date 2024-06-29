@@ -3,6 +3,7 @@ package controller;
 import java.util.List;
 
 import exception.AlugueisException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -11,6 +12,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Aluguel;
 import model.entity.Frete;
@@ -20,6 +22,8 @@ import service.FreteService;
 public class FreteController {
 	FreteService freteService = new FreteService();
 
+	@Context
+	private HttpServletRequest request;
 
 
 	@POST

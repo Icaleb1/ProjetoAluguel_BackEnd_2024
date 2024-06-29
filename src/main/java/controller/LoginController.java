@@ -1,10 +1,12 @@
 package controller;
 
 import exception.AlugueisException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Usuario;
 import model.entity.dto.UsuarioDto;
@@ -15,7 +17,11 @@ import service.LoginService;
 public class LoginController {
 	
 private LoginService loginService = new LoginService();
-	
+		
+	@Context
+	private HttpServletRequest request;
+
+
 	@POST
 	@Path("/autenticar")
 	@Consumes(MediaType.APPLICATION_JSON)
