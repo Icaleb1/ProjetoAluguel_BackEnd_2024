@@ -19,7 +19,7 @@ import model.entity.Endereco;
 import model.entity.Usuario;
 import service.UsuarioService;
 
-@Path ("/restrito/usuario")
+@Path ("/usuario")
 public class UsuarioController {
 	UsuarioService usuarioService = new UsuarioService();
 	
