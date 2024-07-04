@@ -32,6 +32,10 @@ private ItemRepository itemRepository = new ItemRepository();
 		return itemRepository.consultarTodos();
 	}
 	
+	public List<Item> consultarTodosPorIdAluguel(int idAluguel){
+		return itemRepository.consultarTodosPorIdAluguel(idAluguel);
+	}
+	
 	private void validarCamposObrigatorios(Item itemValidado) throws AlugueisException {
 		String mensagemValidacao = "";
 		

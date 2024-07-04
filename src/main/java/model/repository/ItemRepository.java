@@ -100,7 +100,7 @@ public class ItemRepository {
 	
 	public boolean alugar(int idItemAlugado) {
 		  boolean alugado = false;
-		  String query = "UPDATE db_camax.item SET alugado=true WHERE id=?";
+		  String query = "UPDATE db_camax.item SET disponivel=false WHERE id=?";
 		  Connection conn = Banco.getConnection();
 		  PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 		  try {
@@ -194,7 +194,7 @@ public class ItemRepository {
 				Item item = new Item();
 				item.setId(resultado.getInt("ID"));
 				item.setId_Aluguel(resultado.getInt("ID_ALUGUEL"));
-				item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_VACINA")));
+				item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_BRINQUEDO")));
 				items.add(item);
 			}
 

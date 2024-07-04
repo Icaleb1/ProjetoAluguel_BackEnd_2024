@@ -5,6 +5,7 @@ import java.util.List;
 import exception.AlugueisException;
 import model.entity.Aluguel;
 import model.entity.Item;
+import model.entity.ItemCarrinho;
 import model.entity.Usuario;
 import model.repository.AluguelRepository;
 import model.repository.ItemRepository;
@@ -14,9 +15,8 @@ private AluguelRepository aluguelRepository = new AluguelRepository();
 private ItemRepository itemRepository = new ItemRepository();
 	
 	public Aluguel salvar(Aluguel novoAluguel) throws AlugueisException {
-		validarCamposObrigatorios(novoAluguel);
-		atualizarEstoque(novoAluguel);
-		alugar(novoAluguel);
+		//validarCamposObrigatorios(novoAluguel);
+		//alugar(novoAluguel);
 		return aluguelRepository.salvar(novoAluguel);
 	}
 	
@@ -55,9 +55,6 @@ private ItemRepository itemRepository = new ItemRepository();
 		if (aluguelValidado.getValorTotal() == 0) {
 			mensagemValidacao = "Valor total é obrigatório!";
 		}
-		if (aluguelValidado.getFrete() == null) {
-			mensagemValidacao = "Frete obrigatório!";
-		}
 		
 		if (!mensagemValidacao.isEmpty()) {
 			throw new AlugueisException("Preencha os seguintes campos: " + mensagemValidacao);
@@ -66,8 +63,7 @@ private ItemRepository itemRepository = new ItemRepository();
 
 	}
 
-
-	  private void alugar(Aluguel aluguel) {
+	private void alugar(Aluguel aluguel) {
 	        List<Item> itens = itemRepository.consultarTodosPorIdAluguel(aluguel.getId());
 
 	        for (Item item : itens) {
@@ -75,7 +71,9 @@ private ItemRepository itemRepository = new ItemRepository();
 	        }
 	    }
 	
-	private void atualizarEstoque(Aluguel aluguelAtualizado) throws AlugueisException {
-
-	}
+		/*
+		 * public boolean adicionarItensAoAluguel(int aluguelId, List<ItemCarrinho>
+		 * itensCarrinho) { return aluguelRepository.adicionarItensAoAluguel(aluguelId,
+		 * itensCarrinho); }
+		 */
 }

@@ -64,7 +64,6 @@ public class EnderecoRepository{
 		return excluiu;
 	}
 
-
 	public boolean alterar(Endereco enderecoEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.endereco "
@@ -97,7 +96,6 @@ public class EnderecoRepository{
 		}
 		return alterou;
 	}
-
 
 	public Endereco consultarPorId(int id) {
 		Connection conn = Banco.getConnection();
@@ -135,7 +133,6 @@ public class EnderecoRepository{
 		}
 		return endereco;
 	}
-
 
 	public ArrayList<Endereco> consultarTodos() {
 		ArrayList<Endereco> enderecos = new ArrayList<>();
@@ -204,4 +201,42 @@ public class EnderecoRepository{
 		}
 		return enderecos;
 	}
+
+	public Endereco consultarPrincipalPorIdUsuario(int idUsuario) {
+	    Connection conn = Banco.getConnection();
+	    Statement stmt = Banco.getStatement(conn);
+	    
+	    Endereco endereco = null;
+	    ResultSet resultado = null;
+	    String query = "SELECT * FROM db_camax.endereco WHERE id_usuario = " + idUsuario + " AND principal = true";
+	    
+	    try {
+	        resultado = stmt.executeQuery(query);
+	        if(resultado.next()) {
+	            endereco = new Endereco();
+	            endereco.setId(resultado.getInt("ID"));
+	            endereco.setNome(resultado.getString("NOME"));
+	            endereco.setPrincipal(resultado.getBoolean("PRINCIPAL"));
+	            endereco.setIdUsuario(resultado.getInt("ID_USUARIO"));
+	            endereco.setBairro(resultado.getString("BAIRRO"));
+	            endereco.setCidade(resultado.getString("CIDADE"));
+	            endereco.setComplemento(resultado.getString("COMPLEMENTO"));
+	            endereco.setEstado(resultado.getString("ESTADO")); 
+	            endereco.setLote(resultado.getString("LOTE"));
+	            endereco.setReferencia(resultado.getString("REFERENCIAS"));
+	            endereco.setCep(resultado.getInt("CEP"));
+	            endereco.setNumero(resultado.getInt("NUMERO"));
+	        }
+	    } catch (SQLException erro) {
+	        System.out.println("Erro ao consultar endereço principal para o usuário com id: " + idUsuario);
+	        System.out.println("Erro: " + erro.getMessage());
+	    } finally {
+	        Banco.closeResultSet(resultado);
+	        Banco.closeStatement(stmt);
+	        Banco.closeConnection(conn);
+	    }
+	    return endereco;
+	}
+
+
 }

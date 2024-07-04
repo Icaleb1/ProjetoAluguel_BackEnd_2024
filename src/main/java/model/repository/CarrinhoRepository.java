@@ -10,9 +10,12 @@ import java.util.List;
 
 import model.entity.Brinquedo;
 import model.entity.Carrinho;
+import model.entity.Item;
 import model.entity.ItemCarrinho;
 
 public class CarrinhoRepository {
+	
+	BrinquedoRepository brinquedoRepository = new BrinquedoRepository();
 	
 	public Carrinho criarCarrinho(int idUsuario) {
         Carrinho carrinho = new Carrinho();
@@ -107,4 +110,96 @@ public class CarrinhoRepository {
 
 	        return carrinho;
 	    }
-	}
+	
+
+
+	 public boolean adicionarItensAoAluguel(int aluguelId, List<ItemCarrinho> itensCarrinho) {
+	        String query = "UPDATE db_camax.ITEM SET ID_ALUGUEL = ?, DISPONIVEL = false WHERE ID = ?";
+	        Connection conn = null;
+	        PreparedStatement psmt = null;
+	        boolean sucesso = true;
+
+	        try {
+	            conn = Banco.getConnection();
+	            psmt = conn.prepareStatement(query);
+
+	            for (ItemCarrinho itemCarrinho : itensCarrinho) {
+	                List<Item> itensDisponiveis = selecionarItensDisponiveis(itemCarrinho.getBrinquedo().getId(), itemCarrinho.getQuantidade());
+
+	                for (Item item : itensDisponiveis) {
+	                    psmt.setInt(1, aluguelId);
+	                    psmt.setInt(2, item.getId());
+	                    psmt.addBatch(); // Adiciona a operação ao batch para execução em lote
+	                }
+	            }
+
+	            psmt.executeBatch(); // Executa todas as atualizações em lote
+
+	        } catch (SQLException e) {
+	            System.out.println("Erro ao adicionar itens ao aluguel: " + e.getMessage());
+	            sucesso = false;
+	        } finally {
+	            Banco.closePreparedStatement(psmt);
+	            Banco.closeConnection(conn);
+	        }
+
+	        return sucesso;
+	    }
+
+
+	    
+	    public List<Item> selecionarItensDisponiveis(int brinquedoId, int quantidade) {
+	        String query = "SELECT * FROM ITEM WHERE ID_BRINQUEDO = ? AND DISPONIVEL = true LIMIT ?";
+	        Connection conn = null;
+	        PreparedStatement psmt = null;
+	        ResultSet resultado = null;
+	        List<Item> itensDisponiveis = new ArrayList<>();
+
+	        try {
+	            conn = Banco.getConnection();
+	            psmt = conn.prepareStatement(query);
+	            psmt.setInt(1, brinquedoId);
+	            psmt.setInt(2, quantidade);
+	            resultado = psmt.executeQuery();
+
+	            while (resultado.next()) {
+	                Item item = new Item();
+	                item.setId(resultado.getInt("ID"));
+	                item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_BRINQUEDO")));
+	                item.setDisponivel(resultado.getBoolean("DISPONIVEL"));
+	                itensDisponiveis.add(item);
+	            }
+
+	        } catch (SQLException e) {
+	            System.out.println("Erro ao selecionar itens disponíveis: " + e.getMessage());
+	        } finally {
+	            Banco.closeResultSet(resultado);
+	            Banco.closePreparedStatement(psmt);
+	            Banco.closeConnection(conn);
+	        }
+
+	        return itensDisponiveis;
+	    }
+
+
+	    public boolean limparCarrinho(int idCarrinho) {
+	        String query = "DELETE FROM db_camax.ITEM_CARRINHO WHERE ID_CARRINHO = ?";
+	        Connection conn = Banco.getConnection();
+	        PreparedStatement psmt = Banco.getPreparedStatement(conn, query);
+
+	        try {
+	            psmt.setInt(1, idCarrinho);
+	            
+	            int rowsAffected = psmt.executeUpdate();
+	            return rowsAffected > 0;
+	        } catch (SQLException e) {
+	            System.out.println("Erro ao limpar o carrinho: " + e.getMessage());
+	            return false;
+	        } finally {
+	            Banco.closePreparedStatement(psmt);
+	            Banco.closeConnection(conn);
+	        }
+	    }
+
+
+}

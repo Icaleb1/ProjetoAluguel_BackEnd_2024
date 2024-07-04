@@ -6,29 +6,33 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import model.entity.Aluguel;
+import model.entity.Brinquedo;
 import model.entity.Item;
+import model.entity.ItemCarrinho;
 import model.entity.Usuario;
 
 public class AluguelRepository {
+	
+	BrinquedoRepository brinquedoRepository = new BrinquedoRepository();
 		
 		public Aluguel salvar(Aluguel novoAluguel) {
-			String query = "INSERT INTO db_camax.aluguel (id_usuario, id_frete, id_endereco, data_aluguel, data_devolucao,"
-					+ " data_devolucao_definitiva, valores_adicionais, valor_total) VALUES (?,?,?,?,?,?,?,?)";
+			String query = "INSERT INTO db_camax.aluguel (id_usuario, id_endereco, data_aluguel, data_devolucao,"
+					+ " data_devolucao_definitiva, valores_adicionais, valor_total) VALUES (?,?,?,?,?,?,?)";
 			
 			Connection conn = Banco.getConnection();
 			PreparedStatement psmt = Banco.getPreparedStatementWithPk(conn, query);
 			
 			try {
 				psmt.setInt(1, novoAluguel.getUsuario().getId());
-				psmt.setInt(2, novoAluguel.getFrete().getId());	
-				psmt.setInt(3, novoAluguel.getEnderecoDeEntrega().getId());
-				psmt.setDate(4, novoAluguel.getDataAluguel());
-				psmt.setDate(5, novoAluguel.getDataDevolucao());
-				psmt.setDate(6, novoAluguel.getDataDevDefinitiva());
-				psmt.setDouble(7, novoAluguel.getValoresAdicionais());
-				psmt.setDouble(8, novoAluguel.getValorTotal());
+				psmt.setInt(2, novoAluguel.getEnderecoDeEntrega().getId());
+				psmt.setDate(3, novoAluguel.getDataAluguel());
+				psmt.setDate(4, novoAluguel.getDataDevolucao());
+				psmt.setDate(5, novoAluguel.getDataDevDefinitiva());
+				psmt.setDouble(6, novoAluguel.getValoresAdicionais());
+				psmt.setDouble(7, novoAluguel.getValorTotal());
 				psmt.execute();
 				ResultSet resultado = psmt.getGeneratedKeys();
 				if (resultado.next()) {
@@ -67,14 +71,13 @@ public class AluguelRepository {
 		public boolean alterar(Aluguel aluguelEditado) {
 			boolean alterou = false;
 			String query = " UPDATE db_camax.aluguel "
-					     + " SET id_usuario=?, id_frete=?, id_endereco=?, data_aluguel=?, data_devolucao=?,"
+					     + " SET id_usuario=?, id_endereco=?, data_aluguel=?, data_devolucao=?,"
 					     + " data_devolucao_definitiva=?, valores_adicionais=?, valor_total=?"
 					     + " WHERE id=? ";
 			Connection conn = Banco.getConnection();
 			PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 			try {
 				stmt.setInt(1, aluguelEditado.getUsuario().getId());
-				stmt.setInt(2, aluguelEditado.getFrete().getId());
 				stmt.setInt(3, aluguelEditado.getEnderecoDeEntrega().getId());
 				stmt.setDate(4, aluguelEditado.getDataAluguel());
 				stmt.setDate(5, aluguelEditado.getDataDevolucao());
@@ -113,7 +116,6 @@ public class AluguelRepository {
 				if(resultado.next()){
 					aluguel = new Aluguel();
 					aluguel.setId(resultado.getInt("ID"));
-					aluguel.setFrete(freteRepository.consultarPorId(resultado.getInt("ID_FRETE")));
 					aluguel.setUsuario(usuarioRepository.consultarPorId(resultado.getInt("ID_USUARIO")));
 					aluguel.setEnderecoDeEntrega(enderecoRepository.consultarPorId(resultado.getInt("ID_ENDERECO")));
 					aluguel.setDataAluguel(resultado.getDate("DATA_ALUGUEL"));
@@ -153,7 +155,6 @@ public class AluguelRepository {
 				while(resultado.next()){
 					Aluguel aluguel = new Aluguel();
 					aluguel.setId(resultado.getInt("ID"));
-					aluguel.setFrete(freteRepository.consultarPorId(resultado.getInt("ID_FRETE")));
 					aluguel.setUsuario(usuarioRepository.consultarPorId(resultado.getInt("ID_USUARIO")));
 					aluguel.setEnderecoDeEntrega(enderecoRepository.consultarPorId(resultado.getInt("ID_ENDERECO")));
 					aluguel.setDataAluguel(resultado.getDate("DATA_ALUGUEL"));
@@ -174,7 +175,57 @@ public class AluguelRepository {
 			}
 			return alugueis;
 		}
-
+}
 		
-	}
+	/*
+	 * public boolean adicionarItensAoAluguel(int aluguelId, List<ItemCarrinho>
+	 * itensCarrinho) { String query =
+	 * "UPDATE ITEM SET ID_ALUGUEL = ?, DISPONIVEL = false WHERE ID = ?"; Connection
+	 * conn = null; PreparedStatement psmt = null; boolean sucesso = true;
+	 * 
+	 * try { conn = Banco.getConnection(); psmt = conn.prepareStatement(query);
+	 * 
+	 * for (ItemCarrinho itemCarrinho : itensCarrinho) { List<Item> itensDisponiveis
+	 * = selecionarItensDisponiveis(itemCarrinho.getBrinquedo().getId(),
+	 * itemCarrinho.getQuantidade());
+	 * 
+	 * for (Item item : itensDisponiveis) { psmt.setInt(1, aluguelId);
+	 * psmt.setInt(2, item.getId()); psmt.addBatch(); // Adiciona a operação ao
+	 * batch para execução em lote } }
+	 * 
+	 * psmt.executeBatch(); // Executa todas as atualizações em lote
+	 * 
+	 * } catch (SQLException e) {
+	 * System.out.println("Erro ao adicionar itens ao aluguel: " + e.getMessage());
+	 * sucesso = false; } finally { Banco.closePreparedStatement(psmt);
+	 * Banco.closeConnection(conn); }
+	 * 
+	 * return sucesso; }
+	 * 
+	 * 
+	 * // Método auxiliar para selecionar itens disponíveis public List<Item>
+	 * selecionarItensDisponiveis(int brinquedoId, int quantidade) { String query =
+	 * "SELECT * FROM ITEM WHERE ID_BRINQUEDO = ? AND DISPONIVEL = true LIMIT ?";
+	 * Connection conn = null; PreparedStatement psmt = null; ResultSet resultado =
+	 * null; List<Item> itensDisponiveis = new ArrayList<>();
+	 * 
+	 * try { conn = Banco.getConnection(); psmt = conn.prepareStatement(query);
+	 * psmt.setInt(1, brinquedoId); psmt.setInt(2, quantidade); resultado =
+	 * psmt.executeQuery();
+	 * 
+	 * while (resultado.next()) { Item item = new Item();
+	 * item.setId(resultado.getInt("ID"));
+	 * item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt(
+	 * "ID_BRINQUEDO"))); item.setDisponivel(resultado.getBoolean("DISPONIVEL"));
+	 * itensDisponiveis.add(item); }
+	 * 
+	 * } catch (SQLException e) {
+	 * System.out.println("Erro ao selecionar itens disponíveis: " +
+	 * e.getMessage()); } finally { Banco.closeResultSet(resultado);
+	 * Banco.closePreparedStatement(psmt); Banco.closeConnection(conn); }
+	 * 
+	 * return itensDisponiveis; } }
+	 */
+		
+	
 

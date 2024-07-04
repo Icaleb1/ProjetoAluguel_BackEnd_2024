@@ -59,6 +59,12 @@ public class ItemController {
 	public List<Item> consultarTodas(){
 		return itemService.consultarTodos();
 	}
+	
+	@GET
+	@Path("/todos-por-aluguel/{idAluguel}")
+	public List<Item> consultarTodosPorIdAluguel(@PathParam("idAluguel") int idAluguel){
+		return itemService.consultarTodosPorIdAluguel(idAluguel);
+	}
 
 
 }

@@ -6,7 +6,9 @@ import exception.AlugueisException;
 import filter.AuthFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -14,6 +16,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Carrinho;
 import model.entity.Endereco;
+import model.entity.ItemCarrinho;
 import model.entity.Usuario;
 import service.CarrinhoService;
 import service.UsuarioService;
@@ -26,6 +29,16 @@ public class CarrinhoController {
 	
 	CarrinhoService carrinhoService = new CarrinhoService();
 	UsuarioService usuarioService = new UsuarioService();
+	
+	
+	
+	@PUT
+    @Path("/adicao-aluguel/{id_aluguel}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean adicionarItensAoAluguel(@PathParam("id_aluguel") int aluguelId, List<ItemCarrinho> itensCarrinho) throws AlugueisException {
+        return carrinhoService.adicionarItensAoAluguel(aluguelId, itensCarrinho);
+    }
 	
 	
 	@Path("/por-usuario/{id}")
@@ -56,6 +69,12 @@ public class CarrinhoController {
 	@Path("/{idUsuario}")
 	public Carrinho consultarPorIdUsuario(@PathParam("idUsuario") int idUsuario){
 		 return carrinhoService.consultarPorIdUsuario(idUsuario);
+	}
+	
+	@DELETE 
+	@Path("/{idCarrinho}")
+	public boolean limparCarrinho(@PathParam("idCarrinho") int idCarrinho) {
+		return carrinhoService.limparCarrinho(idCarrinho);
 	}
 	
 }

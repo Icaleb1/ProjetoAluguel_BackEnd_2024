@@ -37,6 +37,9 @@ public class EnderecoService {
 		return enderecoRepository.consultarTodosPorIdUsuario(id);
 	}
 	
+	public Endereco consultarPrincipalPorIdUsuario(int id_usuario) {
+		return enderecoRepository.consultarPrincipalPorIdUsuario(id_usuario);
+	}
 	
 	private void validarCamposObrigatorios(Endereco enderecoValidado) throws AlugueisException {
 		String mensagemValidacao = "";

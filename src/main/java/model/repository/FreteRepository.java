@@ -20,7 +20,9 @@ public class FreteRepository{
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		
 		try {
-			stmt.setDouble(1, novoFrete.getValor());
+			stmt.setInt(1, novoFrete.getId_aluguel());
+			stmt.setDouble(2, novoFrete.getValor());
+			stmt.setDouble(3, novoFrete.getDistancia());
 		
 			
 			
@@ -61,15 +63,17 @@ public class FreteRepository{
 	public boolean alterar(Frete freteEditado) {
 		boolean alterou = false;
 		String query = " UPDATE db_camax.frete "
-				     + " SET valor=? "
+				     + " SET id_aluguel=?, valor=?, distancia=? "
 				     + " WHERE id=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
-			stmt.setDouble(1, freteEditado.getValor());
+			stmt.setInt(1, freteEditado.getId_aluguel());
+			stmt.setDouble(2, freteEditado.getValor());
+			stmt.setDouble(3, freteEditado.getDistancia());
 			
 			
-			stmt.setInt(2, freteEditado.getId());
+			stmt.setInt(4, freteEditado.getId());
 			alterou = stmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar frete!");
@@ -95,7 +99,9 @@ public class FreteRepository{
 			if(resultado.next()){
 				frete = new Frete();
 				frete.setId(resultado.getInt("ID"));
+				frete.setId_aluguel(resultado.getInt("ID_ALUGUEL"));
 				frete.setValor(resultado.getDouble("VALOR"));
+				frete.setDistancia(resultado.getDouble("DISTANCIA"));
 				
 			}
 		} catch (SQLException erro){
@@ -138,7 +144,9 @@ public class FreteRepository{
 	private Frete construirDoResultSet(ResultSet resultado) throws SQLException {
 		Frete frete = new Frete();
 		frete.setId(resultado.getInt("ID"));
+		frete.setId_aluguel(resultado.getInt("ID_ALUGUEL"));
 		frete.setValor(resultado.getDouble("VALOR"));
+		frete.setDistancia(resultado.getDouble("DISTANCIA"));
 		
 
 		return frete;

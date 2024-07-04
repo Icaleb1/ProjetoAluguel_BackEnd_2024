@@ -16,6 +16,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.Aluguel;
 import model.entity.Brinquedo;
+import model.entity.ItemCarrinho;
 import service.AluguelService;
 
 @Path("/restrito/aluguel")
@@ -27,6 +28,19 @@ public class AluguelController {
 	private HttpServletRequest request;
 
 
+	/*
+	 * @PUT
+	 * 
+	 * @Path("/adicao-aluguel/{id_aluguel}")
+	 * 
+	 * @Consumes(MediaType.APPLICATION_JSON)
+	 * 
+	 * @Produces(MediaType.TEXT_PLAIN) public boolean
+	 * adicionarItensAoAluguel(@PathParam("id_aluguel") int aluguelId,
+	 * List<ItemCarrinho> itensCarrinho) throws AlugueisException { return
+	 * aluguelService.adicionarItensAoAluguel(aluguelId, itensCarrinho); }
+	 */
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

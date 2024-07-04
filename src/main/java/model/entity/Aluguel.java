@@ -14,7 +14,6 @@ public class Aluguel {
 	private double valoresAdicionais;
 	private double valorTotal;
 	private Endereco enderecoDeEntrega;
-	private Frete frete;
 	
 	
 	public Aluguel() {
@@ -35,8 +34,7 @@ public class Aluguel {
 		this.valoresAdicionais = valoresAdicionais;
 		this.valorTotal = valorTotal;
 		this.enderecoDeEntrega = enderecoDeEntrega;
-		this.frete = frete;
-	}
+			}
 
 	
 	public int getId() {
@@ -109,15 +107,7 @@ public class Aluguel {
 	}
 
 
-	public Frete getFrete() {
-		return frete;
-	}
-
-
-	public void setFrete(Frete frete) {
-		this.frete = frete;
-	}
-
+	
 
 	public double getValoresAdicionais() {
 		return valoresAdicionais;

@@ -5,8 +5,10 @@ import java.util.List;
 public class Frete {
 	
 	private int id;
+	private int id_aluguel;
 	private double valor;
 	private double distancia;
+
 	
 	
 	public Frete() {
@@ -15,9 +17,10 @@ public class Frete {
 	}
 
 
-	public Frete(int id, double valor, double distancia) {
+	public Frete(int id, int id_aluguel, double valor, double distancia) {
 		super();
 		this.id = id;
+		this.id_aluguel = id_aluguel;
 		this.valor = valor;
 		this.distancia = distancia;
 	}
@@ -50,6 +53,16 @@ public class Frete {
 
 	public void setDistancia(double distancia) {
 		this.distancia = distancia;
+	}
+
+
+	public int getId_aluguel() {
+		return id_aluguel;
+	}
+
+
+	public void setId_aluguel(int id_aluguel) {
+		this.id_aluguel = id_aluguel;
 	}
 
 
