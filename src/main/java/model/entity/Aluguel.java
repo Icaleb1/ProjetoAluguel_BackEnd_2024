@@ -13,7 +13,7 @@ public class Aluguel {
 	private Date dataDevDefinitiva;
 	private double valoresAdicionais;
 	private double valorTotal;
-	private Endereco enderecoDeEntrega;
+	private int idEnderecoDeEntrega;
 	
 	
 	public Aluguel() {
@@ -23,7 +23,7 @@ public class Aluguel {
 
 
 	public Aluguel(int id, Usuario usuario, List<Item> itens, Date dataAluguel, Date dataDevolucao, Date dataDevDefinitiva,
-			double valorTotal, Frete frete, double valoresAdicionais, Endereco enderecoDeEntrega) {
+			double valorTotal, Frete frete, double valoresAdicionais, int idEnderecoDeEntrega) {
 		super();
 		this.id = id;
 		this.usuario = usuario;
@@ -33,7 +33,7 @@ public class Aluguel {
 		this.dataDevDefinitiva = dataDevDefinitiva;
 		this.valoresAdicionais = valoresAdicionais;
 		this.valorTotal = valorTotal;
-		this.enderecoDeEntrega = enderecoDeEntrega;
+		this.idEnderecoDeEntrega = idEnderecoDeEntrega;
 			}
 
 	
@@ -119,13 +119,13 @@ public class Aluguel {
 	}
 
 
-	public Endereco getEnderecoDeEntrega() {
-		return enderecoDeEntrega;
+	public int getIdEnderecoDeEntrega() {
+		return idEnderecoDeEntrega;
 	}
 
 
-	public void setEnderecoDeEntrega(Endereco enderecoDeEntrega) {
-		this.enderecoDeEntrega = enderecoDeEntrega;
+	public void setIdEnderecoDeEntrega(int idEnderecoDeEntrega) {
+		this.idEnderecoDeEntrega = idEnderecoDeEntrega;
 	}
 
 

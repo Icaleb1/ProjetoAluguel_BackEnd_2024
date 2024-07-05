@@ -27,7 +27,7 @@ public class AluguelRepository {
 			
 			try {
 				psmt.setInt(1, novoAluguel.getUsuario().getId());
-				psmt.setInt(2, novoAluguel.getEnderecoDeEntrega().getId());
+				psmt.setInt(2, novoAluguel.getIdEnderecoDeEntrega());
 				psmt.setDate(3, novoAluguel.getDataAluguel());
 				psmt.setDate(4, novoAluguel.getDataDevolucao());
 				psmt.setDate(5, novoAluguel.getDataDevDefinitiva());
@@ -78,7 +78,7 @@ public class AluguelRepository {
 			PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 			try {
 				stmt.setInt(1, aluguelEditado.getUsuario().getId());
-				stmt.setInt(3, aluguelEditado.getEnderecoDeEntrega().getId());
+				stmt.setInt(3, aluguelEditado.getIdEnderecoDeEntrega());
 				stmt.setDate(4, aluguelEditado.getDataAluguel());
 				stmt.setDate(5, aluguelEditado.getDataDevolucao());
 				stmt.setDate(6, aluguelEditado.getDataDevDefinitiva());
@@ -117,7 +117,7 @@ public class AluguelRepository {
 					aluguel = new Aluguel();
 					aluguel.setId(resultado.getInt("ID"));
 					aluguel.setUsuario(usuarioRepository.consultarPorId(resultado.getInt("ID_USUARIO")));
-					aluguel.setEnderecoDeEntrega(enderecoRepository.consultarPorId(resultado.getInt("ID_ENDERECO")));
+					aluguel.setIdEnderecoDeEntrega(resultado.getInt("ID_ENDERECO"));
 					aluguel.setDataAluguel(resultado.getDate("DATA_ALUGUEL"));
 					aluguel.setDataDevolucao(resultado.getDate("DATA_DEVOLUCAO"));
 					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));
@@ -156,7 +156,7 @@ public class AluguelRepository {
 					Aluguel aluguel = new Aluguel();
 					aluguel.setId(resultado.getInt("ID"));
 					aluguel.setUsuario(usuarioRepository.consultarPorId(resultado.getInt("ID_USUARIO")));
-					aluguel.setEnderecoDeEntrega(enderecoRepository.consultarPorId(resultado.getInt("ID_ENDERECO")));
+					aluguel.setIdEnderecoDeEntrega(resultado.getInt("ID_ENDERECO"));
 					aluguel.setDataAluguel(resultado.getDate("DATA_ALUGUEL"));
 					aluguel.setDataDevolucao(resultado.getDate("DATA_DEVOLUCAO"));
 					aluguel.setDataDevDefinitiva(resultado.getDate("DATA_DEVOLUCAO_DEFINITIVA"));

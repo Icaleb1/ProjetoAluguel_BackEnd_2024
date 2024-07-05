@@ -114,38 +114,48 @@ public class CarrinhoRepository {
 
 
 	 public boolean adicionarItensAoAluguel(int aluguelId, List<ItemCarrinho> itensCarrinho) {
-	        String query = "UPDATE db_camax.ITEM SET ID_ALUGUEL = ?, DISPONIVEL = false WHERE ID = ?";
-	        Connection conn = null;
-	        PreparedStatement psmt = null;
-	        boolean sucesso = true;
+		    String query = "UPDATE db_camax.ITEM SET ID_ALUGUEL = ?, DISPONIVEL = TRUE "
+		                 + "WHERE ID = ?";
+		    Connection conn = null;
+		    PreparedStatement psmt = null;
+		    boolean sucesso = true;
 
-	        try {
-	            conn = Banco.getConnection();
-	            psmt = conn.prepareStatement(query);
+		    try {
+		        conn = Banco.getConnection();
+		        psmt = conn.prepareStatement(query);
 
-	            for (ItemCarrinho itemCarrinho : itensCarrinho) {
-	                List<Item> itensDisponiveis = selecionarItensDisponiveis(itemCarrinho.getBrinquedo().getId(), itemCarrinho.getQuantidade());
+		        for (ItemCarrinho itemCarrinho : itensCarrinho) {
+		            // Seleciona os itens disponíveis com base na quantidade no ItemCarrinho
+		            List<Item> itensDisponiveis = selecionarItensDisponiveis(itemCarrinho.getBrinquedo().getId(), itemCarrinho.getQuantidade());
 
-	                for (Item item : itensDisponiveis) {
-	                    psmt.setInt(1, aluguelId);
-	                    psmt.setInt(2, item.getId());
-	                    psmt.addBatch(); // Adiciona a operação ao batch para execução em lote
-	                }
-	            }
+		            if (itensDisponiveis.size() < itemCarrinho.getQuantidade()) {
+		                System.out.println("Não há itens suficientes disponíveis para o brinquedo: " + itemCarrinho.getBrinquedo().getNome());
+		                sucesso = false;
+		                break;
+		            }
 
-	            psmt.executeBatch(); // Executa todas as atualizações em lote
+		            // Atualiza cada item disponível selecionado
+		            for (Item item : itensDisponiveis) {
+		                psmt.setInt(1, aluguelId);
+		                psmt.setInt(2, item.getId());
+		                psmt.addBatch(); // Adiciona a operação ao batch para execução em lote
+		            }
+		        }
 
-	        } catch (SQLException e) {
-	            System.out.println("Erro ao adicionar itens ao aluguel: " + e.getMessage());
-	            sucesso = false;
-	        } finally {
-	            Banco.closePreparedStatement(psmt);
-	            Banco.closeConnection(conn);
-	        }
+		        if (sucesso) {
+		            psmt.executeBatch(); // Executa todas as atualizações em lote
+		        }
 
-	        return sucesso;
-	    }
+		    } catch (SQLException e) {
+		        System.out.println("Erro ao adicionar itens ao aluguel: " + e.getMessage());
+		        sucesso = false;
+		    } finally {
+		        Banco.closePreparedStatement(psmt);
+		        Banco.closeConnection(conn);
+		    }
 
+		    return sucesso;
+		}
 
 	    
 	    public List<Item> selecionarItensDisponiveis(int brinquedoId, int quantidade) {

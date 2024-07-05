@@ -130,14 +130,20 @@ public class BrinquedoRepository {
 			resultado = stmt.executeQuery(query);
 			
 			while(resultado.next()){
-				Brinquedo brinquedo = new Brinquedo();
-				brinquedo.setId(resultado.getInt("ID"));
-				brinquedo.setNome(resultado.getString("NOME"));
-				brinquedo.setDescricao(resultado.getString("DESCRICAO"));
-				brinquedo.setEstoqueTotal(verificarEstoqueTotal(resultado.getInt("ID")));
-				brinquedo.setEstoqueDisponivel(verificarQuantidadeDisponivel(resultado.getInt("ID")));
-				brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
-				brinquedos.add(brinquedo);
+				  Brinquedo brinquedo = new Brinquedo();
+		            brinquedo.setId(resultado.getInt("ID"));
+		            brinquedo.setNome(resultado.getString("NOME"));
+		            brinquedo.setDescricao(resultado.getString("DESCRICAO"));
+		            int idBrinquedo = resultado.getInt("ID");
+		            int estoqueTotal = verificarEstoqueTotal(idBrinquedo);
+		            int estoqueDisponivel = verificarQuantidadeDisponivel(idBrinquedo);
+		            
+		            atualizarEstoque(idBrinquedo, estoqueDisponivel, estoqueTotal);
+		            
+		            brinquedo.setEstoqueTotal(estoqueTotal);
+		            brinquedo.setEstoqueDisponivel(estoqueDisponivel);
+		            brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
+		            brinquedos.add(brinquedo);
 			}
 
 		} catch (SQLException erro){
@@ -151,29 +157,31 @@ public class BrinquedoRepository {
 		return brinquedos;
 	}
 
-    public boolean atualizarEstoque(int idBrinquedo, int novaQuantidade) {
-        boolean atualizou = false;
-        String query = "UPDATE db_camax.brinquedo SET qtd_em_estoque = ? WHERE id = ?";
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt = Banco.getPreparedStatement(conn, query);
+	public boolean atualizarEstoque(int idBrinquedo, int novaQuantidadeDisponivel, int novoEstoqueTotal) {
+	    boolean atualizou = false;
+	    String query = "UPDATE db_camax.brinquedo SET estoque_disponivel = ?, estoque_total = ? WHERE id = ?";
+	    Connection conn = Banco.getConnection();
+	    PreparedStatement stmt = Banco.getPreparedStatement(conn, query);
 
-        try {
-            stmt.setInt(1, novaQuantidade);
-            stmt.setInt(2, idBrinquedo);
+	    try {
+	        stmt.setInt(1, novaQuantidadeDisponivel);
+	        stmt.setInt(2, novoEstoqueTotal);
+	        stmt.setInt(3, idBrinquedo);
 
-            if (stmt.executeUpdate() > 0) {
-                atualizou = true;
-            }
-        } catch (SQLException erro) {
-            System.out.println("Erro ao atualizar estoque do brinquedo com ID: " + idBrinquedo);
-            System.out.println("Erro: " + erro.getMessage());
-        } finally {
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
+	        if (stmt.executeUpdate() > 0) {
+	            atualizou = true;
+	        }
+	    } catch (SQLException erro) {
+	        System.out.println("Erro ao atualizar estoque do brinquedo com ID: " + idBrinquedo);
+	        System.out.println("Erro: " + erro.getMessage());
+	    } finally {
+	        Banco.closePreparedStatement(stmt);
+	        Banco.closeConnection(conn);
+	    }
 
-        return atualizou;
-    }
+	    return atualizou;
+	}
+
 
     public int verificarQuantidadeDisponivel(int idBrinquedo) {
         int quantidadeDisponivel = 0;
