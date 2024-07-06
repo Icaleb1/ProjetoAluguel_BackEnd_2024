@@ -4,7 +4,6 @@ public class Endereco {
 	
 	private int id;
 	private String nome;
-	private boolean principal;
 	private int idUsuario;
 	private int cep;
 	private String estado;
@@ -20,12 +19,11 @@ public class Endereco {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Endereco(int id, String nome, boolean principal, int idUsuario, int cep, String estado, String cidade, String bairro, String lote, int numero,
+	public Endereco(int id, String nome, int idUsuario, int cep, String estado, String cidade, String bairro, String lote, int numero,
 			String complemento, String referencia) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.principal = principal;
 		this.idUsuario = idUsuario;
 		this.cep = cep;
 		this.estado = estado;
@@ -115,14 +113,6 @@ public class Endereco {
 
 	public void setIdUsuario(int idUsuario) {
 		this.idUsuario = idUsuario;
-	}
-
-	public boolean isPrincipal() {
-		return principal;
-	}
-
-	public void setPrincipal(boolean principal) {
-		this.principal = principal;
 	}
 
 	public String getNome() {
