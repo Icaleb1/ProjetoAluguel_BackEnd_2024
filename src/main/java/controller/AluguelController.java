@@ -19,7 +19,7 @@ import model.entity.Brinquedo;
 import model.entity.ItemCarrinho;
 import service.AluguelService;
 
-@Path("/restrito/aluguel")
+@Path("/aluguel")
 public class AluguelController {
 	AluguelService aluguelService = new AluguelService();
 	
@@ -63,6 +63,13 @@ public class AluguelController {
 		return aluguelService.alterar(aluguelAlterado);
 	}
 	
+	@PUT
+	@Path("/finalizar")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public boolean finalizarAluguel(Aluguel aluguel) throws AlugueisException {
+		return aluguelService.finalizarAluguel(aluguel);
+	}
 	
 	@PUT
 	@Path("/remover-item/{aluguelId}/{itemId}")
@@ -72,10 +79,25 @@ public class AluguelController {
 		return aluguelService.removerItemDoAluguel(aluguelId, itemId);
 	}
 	
+	@PUT
+	@Path("/devolucao/{aluguelId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public boolean DevolucaoDosItens(@PathParam("aluguelId") int aluguelId) throws AlugueisException {
+		return aluguelService.DevolucaoDosItens(aluguelId);
+	}
+	
+	
 	@GET
 	@Path("/{id}")
 	public Aluguel consultarPorId(@PathParam("id") int id){
 		 return aluguelService.consultarPorId(id);
+	}
+	
+	@GET
+	@Path("/todos{idUsuario}")
+	public List<Aluguel> consultarAlugueisPorUsuario(@PathParam("idUsuario") int idUsuario){
+		return aluguelService.consultarAlugueisPorUsuario(idUsuario);
 	}
 	
 	@GET

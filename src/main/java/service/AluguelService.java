@@ -64,9 +64,6 @@ private FreteRepository freteRepository = new FreteRepository();
 		if (aluguelValidado.getDataDevolucao() == null) {
 			mensagemValidacao = "Data de devolução obrigatória!";
 		}
-		if (aluguelValidado.getDataDevDefinitiva() == null) {
-			mensagemValidacao = "Data de devolução definitiva obrigatória!";
-		}
 		if (aluguelValidado.getValorTotal() == 0) {
 			mensagemValidacao = "Valor total é obrigatório!";
 		}
@@ -77,6 +74,22 @@ private FreteRepository freteRepository = new FreteRepository();
 		}
 
 	}
+	
+	public List<Aluguel> consultarAlugueisPorUsuario(int idUsuario){
+		return aluguelRepository.consultarAlugueisPorUsuario(idUsuario);
+	}
+	
+	 public boolean DevolucaoDosItens(int aluguelId) throws AlugueisException {
+	        if (!verificarAluguelNaoDevolvido(aluguelId)) {
+	            throw new AlugueisException("O aluguel já foi devolvido.");
+	        }
+
+	        return aluguelRepository.DevolucaoDosItens(aluguelId);
+	    }
+
+	    private boolean verificarAluguelNaoDevolvido(int aluguelId) {
+	        return aluguelRepository.verificarAluguelNaoDevolvido(aluguelId);
+	    }
 
 	private void alugar(Aluguel aluguel) {
 	        List<Item> itens = itemRepository.consultarTodosPorIdAluguel(aluguel.getId());
@@ -86,6 +99,10 @@ private FreteRepository freteRepository = new FreteRepository();
 	        }
 	    }
 	
+	 public boolean finalizarAluguel(Aluguel aluguel) throws AlugueisException {
+	        validarCamposObrigatorios(aluguel);
+	        return aluguelRepository.finalizarAluguel(aluguel);
+	    }
 	
 	private double calcularValorTotalItens(Aluguel aluguel) {
 	    double valorTotal = 0.0;
@@ -97,6 +114,7 @@ private FreteRepository freteRepository = new FreteRepository();
 	    return valorTotal;
 	}
 
+	
 	
 	private double obterValorFrete(int idAluguel) {
 	    double valorFrete = 0.0;
