@@ -63,6 +63,15 @@ public class AluguelController {
 		return aluguelService.alterar(aluguelAlterado);
 	}
 	
+	
+	@PUT
+	@Path("/remover-item/{aluguelId}/{itemId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public boolean removerItemDoAluguel(@PathParam("aluguelId") int aluguelId, @PathParam("itemId") int itemId) {
+		return aluguelService.removerItemDoAluguel(aluguelId, itemId);
+	}
+	
 	@GET
 	@Path("/{id}")
 	public Aluguel consultarPorId(@PathParam("id") int id){

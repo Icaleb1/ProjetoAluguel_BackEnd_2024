@@ -4,15 +4,18 @@ import java.util.List;
 
 import exception.AlugueisException;
 import model.entity.Aluguel;
+import model.entity.Frete;
 import model.entity.Item;
 import model.entity.ItemCarrinho;
 import model.entity.Usuario;
 import model.repository.AluguelRepository;
+import model.repository.FreteRepository;
 import model.repository.ItemRepository;
 
 public class AluguelService {
 private AluguelRepository aluguelRepository = new AluguelRepository();
 private ItemRepository itemRepository = new ItemRepository();
+private FreteRepository freteRepository = new FreteRepository();
 	
 	public Aluguel salvar(Aluguel novoAluguel) throws AlugueisException {
 		//validarCamposObrigatorios(novoAluguel);
@@ -25,8 +28,20 @@ private ItemRepository itemRepository = new ItemRepository();
 	}
 	
 	public boolean alterar(Aluguel aluguelEditado) throws AlugueisException {
-		validarCamposObrigatorios(aluguelEditado);
+		
+		double valorTotalItens = calcularValorTotalItens(aluguelEditado);
+	    double valorFrete = obterValorFrete(aluguelEditado.getId()); // Método para obter o valor do frete
+
+	    double novoValorTotal = valorTotalItens + valorFrete;
+	    aluguelEditado.setValorTotal(novoValorTotal);
+	    
+	    validarCamposObrigatorios(aluguelEditado);
+
 		return aluguelRepository.alterar(aluguelEditado);
+	}
+	
+	public boolean removerItemDoAluguel(int aluguelId, int itemId) {
+		return aluguelRepository.removerItemDoAluguel(aluguelId, itemId);
 	}
 	
 	public Aluguel consultarPorId(int id) {
@@ -71,6 +86,29 @@ private ItemRepository itemRepository = new ItemRepository();
 	        }
 	    }
 	
+	
+	private double calcularValorTotalItens(Aluguel aluguel) {
+	    double valorTotal = 0.0;
+
+	    for (Item item : aluguel.getItens()) {
+	        valorTotal += item.getBrinquedo().getValorDiaria();
+	    }
+
+	    return valorTotal;
+	}
+
+	
+	private double obterValorFrete(int idAluguel) {
+	    double valorFrete = 0.0;
+
+	    // Supondo que você tenha um método no FreteRepository para buscar o valor do frete por idAluguel
+	    Frete frete = freteRepository.consultarPorIdAluguel(idAluguel);
+	    if (frete != null) {
+	        valorFrete = frete.getValor();
+	    }
+
+	    return valorFrete;
+	}
 		/*
 		 * public boolean adicionarItensAoAluguel(int aluguelId, List<ItemCarrinho>
 		 * itensCarrinho) { return aluguelRepository.adicionarItensAoAluguel(aluguelId,

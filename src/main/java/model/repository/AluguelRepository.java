@@ -78,14 +78,14 @@ public class AluguelRepository {
 			PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 			try {
 				stmt.setInt(1, aluguelEditado.getUsuario().getId());
-				stmt.setInt(3, aluguelEditado.getIdEnderecoDeEntrega());
-				stmt.setDate(4, aluguelEditado.getDataAluguel());
-				stmt.setDate(5, aluguelEditado.getDataDevolucao());
-				stmt.setDate(6, aluguelEditado.getDataDevDefinitiva());
-				stmt.setDouble(7, aluguelEditado.getValoresAdicionais());
-				stmt.setDouble(8, aluguelEditado.getValorTotal());
+				stmt.setInt(2, aluguelEditado.getIdEnderecoDeEntrega());
+				stmt.setDate(3, aluguelEditado.getDataAluguel());
+				stmt.setDate(4, aluguelEditado.getDataDevolucao());
+				stmt.setDate(5, aluguelEditado.getDataDevDefinitiva());
+				stmt.setDouble(6, aluguelEditado.getValoresAdicionais());
+				stmt.setDouble(7, aluguelEditado.getValorTotal());
 				
-				stmt.setInt(9, aluguelEditado.getId());
+				stmt.setInt(8, aluguelEditado.getId());
 				alterou = stmt.executeUpdate() > 0;
 			} catch (SQLException erro) {
 				System.out.println("Erro ao atualizar aluguel ");
@@ -175,8 +175,129 @@ public class AluguelRepository {
 			}
 			return alugueis;
 		}
+
+		public boolean finalizarAluguel(Aluguel aluguelFinalizado, List<ItemCarrinho> itensCarrinho) {
+    boolean alterou = false;
+    String queryAluguel = "UPDATE db_camax.aluguel "
+                        + "SET id_usuario=?, id_endereco=?, data_aluguel=?, data_devolucao=?, "
+                        + "data_devolucao_definitiva=?, valores_adicionais=?, valor_total=? "
+                        + "WHERE id=?";
+    Connection conn = Banco.getConnection();
+    PreparedStatement psmtAluguel = null;
+    PreparedStatement psmtItem = null;
+
+    try {
+        conn.setAutoCommit(false); // Iniciar transação
+
+        // Atualizar informações do aluguel
+        psmtAluguel = Banco.getPreparedStatementWithPk(conn, queryAluguel);
+        psmtAluguel.setInt(1, aluguelFinalizado.getUsuario().getId());
+        psmtAluguel.setInt(2, aluguelFinalizado.getIdEnderecoDeEntrega());
+        psmtAluguel.setDate(3, java.sql.Date.valueOf(java.time.LocalDate.now())); // Data de aluguel atual
+        psmtAluguel.setDate(4, aluguelFinalizado.getDataDevolucao());
+        psmtAluguel.setDate(5, aluguelFinalizado.getDataDevDefinitiva());
+        psmtAluguel.setDouble(6, aluguelFinalizado.getValoresAdicionais());
+        psmtAluguel.setDouble(7, aluguelFinalizado.getValorTotal());
+        psmtAluguel.setInt(8, aluguelFinalizado.getId());
+
+        alterou = psmtAluguel.executeUpdate() > 0;
+
+        if (alterou) {
+            // Atualizar os itens do aluguel
+            String queryItem = "UPDATE ITEM SET ID_ALUGUEL = ?, DISPONIVEL = false WHERE ID = ?";
+            psmtItem = conn.prepareStatement(queryItem);
+
+            for (ItemCarrinho itemCarrinho : itensCarrinho) {
+                List<Item> itensDisponiveis = selecionarItensDisponiveis(itemCarrinho.getBrinquedo().getId(), itemCarrinho.getQuantidade());
+
+                for (Item item : itensDisponiveis) {
+                    psmtItem.setInt(1, aluguelFinalizado.getId());
+                    psmtItem.setInt(2, item.getId());
+                    psmtItem.addBatch();
+                }
+            }
+
+            psmtItem.executeBatch();
+        }
+
+        conn.commit(); // Commit da transação
+    } catch (SQLException erro) {
+        try {
+            conn.rollback(); // Rollback em caso de erro
+        } catch (SQLException e) {
+            System.out.println("Erro ao realizar rollback: " + e.getMessage());
+        }
+        System.out.println("Erro ao finalizar aluguel: " + erro.getMessage());
+        alterou = false;
+    } finally {
+        Banco.closePreparedStatement(psmtAluguel);
+        Banco.closePreparedStatement(psmtItem);
+        Banco.closeConnection(conn);
+    }
+    return alterou;
 }
-		
+
+		private List<Item> selecionarItensDisponiveis(int brinquedoId, int quantidade) {
+    String query = "SELECT * FROM ITEM WHERE ID_BRINQUEDO = ? AND DISPONIVEL = true LIMIT ?";
+    Connection conn = null;
+    PreparedStatement psmt = null;
+    ResultSet resultado = null;
+    List<Item> itensDisponiveis = new ArrayList<>();
+
+    try {
+        conn = Banco.getConnection();
+        psmt = conn.prepareStatement(query);
+        psmt.setInt(1, brinquedoId);
+        psmt.setInt(2, quantidade);
+        resultado = psmt.executeQuery();
+
+        while (resultado.next()) {
+            Item item = new Item();
+            item.setId(resultado.getInt("ID"));
+            item.setBrinquedo(brinquedoRepository.consultarPorId(resultado.getInt("ID_BRINQUEDO")));
+            item.setDisponivel(resultado.getBoolean("DISPONIVEL"));
+            itensDisponiveis.add(item);
+        }
+    } catch (SQLException e) {
+        System.out.println("Erro ao selecionar itens disponíveis: " + e.getMessage());
+    } finally {
+        Banco.closeResultSet(resultado);
+        Banco.closePreparedStatement(psmt);
+        Banco.closeConnection(conn);
+    }
+
+    return itensDisponiveis;
+}
+
+		public boolean removerItemDoAluguel(int aluguelId, int itemId) {
+		    String query = "UPDATE db_camax.ITEM SET ID_ALUGUEL = NULL, DISPONIVEL = TRUE WHERE ID = ? AND ID_ALUGUEL = ?";
+		    Connection conn = null;
+		    PreparedStatement psmt = null;
+		    boolean sucesso = false;
+
+		    try {
+		        conn = Banco.getConnection();
+		        psmt = conn.prepareStatement(query);
+		        psmt.setInt(1, itemId);
+		        psmt.setInt(2, aluguelId);
+
+		        int rowsAffected = psmt.executeUpdate();
+		        if (rowsAffected > 0) {
+		            sucesso = true;
+		        }
+
+		    } catch (SQLException e) {
+		        System.out.println("Erro ao remover item do aluguel: " + e.getMessage());
+		    } finally {
+		        Banco.closePreparedStatement(psmt);
+		        Banco.closeConnection(conn);
+		    }
+
+		    return sucesso;
+		}
+
+
+}
 	/*
 	 * public boolean adicionarItensAoAluguel(int aluguelId, List<ItemCarrinho>
 	 * itensCarrinho) { String query =

@@ -14,8 +14,8 @@ public class FreteRepository{
 
 
 	public Frete salvar(Frete novoFrete) {
-		String sql = " INSERT INTO db_camax.frete (valor) "
-				   + " VALUES(?) ";
+		String sql = " INSERT INTO db_camax.frete (id_aluguel, valor, distancia) "
+				   + " VALUES(?,?,?) ";
 		Connection conexao = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conexao, sql);
 		
@@ -106,6 +106,35 @@ public class FreteRepository{
 			}
 		} catch (SQLException erro){
 			System.out.println("Erro ao consultar frete com o id: " + id);
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return frete;
+	}
+	
+	public Frete consultarPorIdAluguel(int idAluguel) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		Frete frete = null;
+		ResultSet resultado = null;
+		String query = " SELECT * FROM db_camax.frete WHERE id_aluguel = " + idAluguel;
+		
+		try{
+			resultado = stmt.executeQuery(query);
+			if(resultado.next()){
+				frete = new Frete();
+				frete.setId(resultado.getInt("ID"));
+				frete.setId_aluguel(resultado.getInt("ID_ALUGUEL"));
+				frete.setValor(resultado.getDouble("VALOR"));
+				frete.setDistancia(resultado.getDouble("DISTANCIA"));
+				
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar aluguel com o id: " + idAluguel);
 			System.out.println("Erro: " + erro.getMessage());
 		} finally {
 			Banco.closeResultSet(resultado);

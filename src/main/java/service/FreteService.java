@@ -8,10 +8,14 @@ import model.entity.Frete;
 import model.repository.FreteRepository;
 
 public class FreteService {
+	
+private static final double VALOR_GASOLINA_ATUAL = 5.58;
 private FreteRepository freteRepository = new FreteRepository();
 	
 	public Frete salvar(Frete novoFrete) throws AlugueisException {
 		validarCamposObrigatorios(novoFrete);
+		double valorFreteCalculado = calcularValorFrete(novoFrete.getDistancia());
+		novoFrete.setValor(valorFreteCalculado);
 		return freteRepository.salvar(novoFrete);
 	}
 	
@@ -46,5 +50,7 @@ private FreteRepository freteRepository = new FreteRepository();
 
 	}
 
-
+  private double calcularValorFrete(double distancia) {
+        return distancia * VALOR_GASOLINA_ATUAL;
+    }
 }
