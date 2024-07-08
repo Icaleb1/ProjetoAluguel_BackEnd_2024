@@ -13,7 +13,7 @@ import model.entity.Item;
 public class ItemRepository {
 	
 	public Item salvar(Item novoItem) {
-		String query = "INSERT INTO db_camax.item (id_aluguel, id_brinquedo, alugado) VALUES (?,?,?)";
+		String query = "INSERT INTO db_camax.item (id_aluguel, id_brinquedo, disponivel) VALUES (?,?,?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement psmt = Banco.getPreparedStatementWithPk(conn, query);
 		
