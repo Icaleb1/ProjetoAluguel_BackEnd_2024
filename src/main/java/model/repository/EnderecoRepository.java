@@ -243,7 +243,7 @@ public class EnderecoRepository{
 	    Statement stmt = Banco.getStatement(conn);
 	    
 	    ResultSet resultado = null;
-	    String query = "SELECT * FROM db_camax.endereco WHERE idUsuario = " + idUsuario;
+	    String query = "SELECT * FROM db_camax.endereco WHERE id_usuario = " + idUsuario;
 	    
 	    if (seletor.getNomeEndereco() != null) {
 	        query += " AND upper(nome) LIKE UPPER('%" + seletor.getNomeEndereco() + "%')";
