@@ -237,40 +237,35 @@ public class EnderecoRepository{
 	    return endereco;
 	}
 	
-	public ArrayList<Endereco> consultarComFiltro(EnderecoSeletor seletor){
-		ArrayList<Endereco> enderecos = new ArrayList<>();
-		Connection conn = Banco.getConnection();
-		Statement stmt = Banco.getStatement(conn);
-		
-		ResultSet resultado = null;
-		String query = " select * from db_camax.endereco";  
-		boolean primeiro = true;
-		if (seletor.getNomeEndereco() != null) {
-			if (primeiro) {
-				query += " WHERE ";
-			}else {
-				query += " AND ";
-			}
-			query += "upper(brinquedo.nome) LIKE UPPER('%" + seletor.getNomeEndereco() + "%')";
-			primeiro = false;
-		}
-		try{
-			resultado = stmt.executeQuery(query);
-			while(resultado.next()){
-				Endereco endereco = construirDoResultSet(resultado);
-				enderecos.add(endereco);
-			}
-		} catch (SQLException erro){
-			System.out.println("Erro ao consultar todos os seus endereços!");
-			System.out.println("Erro: " + erro.getMessage());
-		} finally {
-			Banco.closeResultSet(resultado);
-			Banco.closeStatement(stmt);
-			Banco.closeConnection(conn);
-		}
-		return enderecos;
-		
+	public ArrayList<Endereco> consultarComFiltro(EnderecoSeletor seletor, int idUsuario) {
+	    ArrayList<Endereco> enderecos = new ArrayList<>();
+	    Connection conn = Banco.getConnection();
+	    Statement stmt = Banco.getStatement(conn);
+	    
+	    ResultSet resultado = null;
+	    String query = "SELECT * FROM db_camax.endereco WHERE idUsuario = " + idUsuario;
+	    
+	    if (seletor.getNomeEndereco() != null) {
+	        query += " AND upper(nome) LIKE UPPER('%" + seletor.getNomeEndereco() + "%')";
+	    }
+	    
+	    try {
+	        resultado = stmt.executeQuery(query);
+	        while (resultado.next()) {
+	            Endereco endereco = construirDoResultSet(resultado);
+	            enderecos.add(endereco);
+	        }
+	    } catch (SQLException erro) {
+	        System.out.println("Erro ao consultar todos os seus endereços!");
+	        System.out.println("Erro: " + erro.getMessage());
+	    } finally {
+	        Banco.closeResultSet(resultado);
+	        Banco.closeStatement(stmt);
+	        Banco.closeConnection(conn);
+	    }
+	    return enderecos;
 	}
+
 	 
 
 }

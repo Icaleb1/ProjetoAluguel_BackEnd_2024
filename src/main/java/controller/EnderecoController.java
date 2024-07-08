@@ -14,7 +14,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import model.entity.Brinquedo;
 import model.entity.Endereco;
+import model.entity.seletores.BrinquedoSeletor;
+import model.entity.seletores.EnderecoSeletor;
 import service.EnderecoService;
 
 @Path ("/restrito/endereco")
@@ -71,7 +74,13 @@ public class EnderecoController {
 		return enderecoService.consultarPrincipalPorIdUsuario(id_usuario);
 	}
 
-	
+	@POST
+	@Path("/filtro/{idUsuario}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Endereco> consultarComFiltros(@PathParam("idUsuario")int idUsuario, EnderecoSeletor seletor){
+		 return enderecoService.consultarComFiltro(seletor, idUsuario);
+	}
 
 
 }

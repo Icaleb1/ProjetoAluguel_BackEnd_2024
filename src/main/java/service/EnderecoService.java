@@ -1,10 +1,12 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import exception.AlugueisException;
 import model.entity.Endereco;
 import model.entity.Usuario;
+import model.entity.seletores.EnderecoSeletor;
 import model.repository.EnderecoRepository;
 
 public class EnderecoService {
@@ -71,6 +73,10 @@ public class EnderecoService {
 			
 		}
 
+	}
+	
+	public ArrayList<Endereco> consultarComFiltro(EnderecoSeletor seletor, int idUsuario){
+		return enderecoRepository.consultarComFiltro(seletor, idUsuario);
 	}
 
 }
