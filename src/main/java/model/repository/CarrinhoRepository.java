@@ -52,7 +52,6 @@ public class CarrinhoRepository {
     }
 
 
-	
 	 public Carrinho consultarPorIdUsuario(int idUsuario) {
 	        Connection conn = Banco.getConnection();
 	        PreparedStatement psmt = null;
@@ -112,7 +111,6 @@ public class CarrinhoRepository {
 	    }
 	
 
-
 	 public boolean adicionarItensAoAluguel(int aluguelId, List<ItemCarrinho> itensCarrinho) {
 		    String query = "UPDATE db_camax.ITEM SET ID_ALUGUEL = ?, DISPONIVEL = TRUE "
 		                 + "WHERE ID = ?";
@@ -158,7 +156,7 @@ public class CarrinhoRepository {
 		}
 
 	    
-	    public List<Item> selecionarItensDisponiveis(int brinquedoId, int quantidade) {
+	 public List<Item> selecionarItensDisponiveis(int brinquedoId, int quantidade) {
 	        String query = "SELECT * FROM ITEM WHERE ID_BRINQUEDO = ? AND DISPONIVEL = true LIMIT ?";
 	        Connection conn = null;
 	        PreparedStatement psmt = null;
@@ -192,7 +190,7 @@ public class CarrinhoRepository {
 	    }
 
 
-	    public boolean limparCarrinho(int idCarrinho) {
+	 public boolean limparCarrinho(int idCarrinho) {
 	        String query = "DELETE FROM db_camax.ITEM_CARRINHO WHERE ID_CARRINHO = ?";
 	        Connection conn = Banco.getConnection();
 	        PreparedStatement psmt = Banco.getPreparedStatement(conn, query);
@@ -212,4 +210,62 @@ public class CarrinhoRepository {
 	    }
 
 
+	 public Carrinho consultarPorId(int id) {
+	        Connection conn = Banco.getConnection();
+	        PreparedStatement psmt = null;
+	        ResultSet resultado = null;
+	        Carrinho carrinho = new Carrinho();
+
+	        String query = "SELECT c.ID, c.ID_USUARIO, ic.ID AS ITEM_ID, ic.ID_BRINQUEDO, ic.QUANTIDADE, " +
+	                       "b.ID AS BRINQUEDO_ID, b.NOME, b.DESCRICAO, b.ESTOQUE_DISPONIVEL, b.ESTOQUE_TOTAL, b.VALOR_DIARIA " +
+	                       "FROM db_camax.CARRINHO c " +
+	                       "LEFT JOIN db_camax.ITEM_CARRINHO ic ON c.ID = ic.ID_CARRINHO " +
+	                       "LEFT JOIN db_camax.BRINQUEDO b ON ic.ID_BRINQUEDO = b.ID " +
+	                       "WHERE c.ID = ?";
+
+	        try {
+	            psmt = conn.prepareStatement(query);
+	            psmt.setInt(1, id);
+	            resultado = psmt.executeQuery();
+
+	            List<ItemCarrinho> itensCarrinho = new ArrayList<>();
+	            while (resultado.next()) {
+	                if (carrinho.getId() == 0) {
+	                    carrinho.setId(resultado.getInt("ID"));
+	                    carrinho.setIdUsuario(resultado.getInt("ID_USUARIO"));
+	                }
+
+	                int itemId = resultado.getInt("ITEM_ID");
+	                if (itemId > 0) {
+	                    Brinquedo brinquedo = new Brinquedo();
+	                    brinquedo.setId(resultado.getInt("BRINQUEDO_ID"));
+	                    brinquedo.setNome(resultado.getString("NOME"));
+	                    brinquedo.setDescricao(resultado.getString("DESCRICAO"));
+	                    brinquedo.setEstoqueDisponivel(resultado.getInt("ESTOQUE_DISPONIVEL"));
+	                    brinquedo.setEstoqueTotal(resultado.getInt("ESTOQUE_TOTAL"));
+	                    brinquedo.setValorDiaria(resultado.getDouble("VALOR_DIARIA"));
+
+	                    ItemCarrinho itemCarrinho = new ItemCarrinho();
+	                    itemCarrinho.setId(itemId);
+	                    itemCarrinho.setIdCarrinho(carrinho.getId());
+	                    itemCarrinho.setBrinquedo(brinquedo);
+	                    itemCarrinho.setQuantidade(resultado.getInt("QUANTIDADE"));
+
+	                    itensCarrinho.add(itemCarrinho);
+	                }
+	            }
+	            carrinho.setItens(itensCarrinho);
+
+	        } catch (SQLException erro) {
+	            System.out.println("Erro ao consultar carrinho com o id: " + id);
+	            System.out.println("Erro: " + erro.getMessage());
+	        } finally {
+	            Banco.closeResultSet(resultado);
+	            Banco.closePreparedStatement(psmt);
+	            Banco.closeConnection(conn);
+	        }
+
+	        return carrinho;
+	    }
+	 
 }

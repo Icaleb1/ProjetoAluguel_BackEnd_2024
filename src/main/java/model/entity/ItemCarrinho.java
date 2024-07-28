@@ -3,7 +3,7 @@ package model.entity;
 public class ItemCarrinho {
 	
 	private int id;
-	private int idCarrinho;
+	private int idCarrinho; 
 	private Brinquedo brinquedo;
 	private int quantidade;
 	

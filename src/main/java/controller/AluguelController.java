@@ -19,7 +19,7 @@ import model.entity.Brinquedo;
 import model.entity.ItemCarrinho;
 import service.AluguelService;
 
-@Path("/aluguel")
+@Path("/restrito/aluguel")
 public class AluguelController {
 	AluguelService aluguelService = new AluguelService();
 	
@@ -86,6 +86,7 @@ public class AluguelController {
 	public boolean DevolucaoDosItens(@PathParam("aluguelId") int aluguelId) throws AlugueisException {
 		return aluguelService.DevolucaoDosItens(aluguelId);
 	}
+	
 	
 	
 	@GET

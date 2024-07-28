@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import exception.AlugueisException;
+import filter.AuthFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -63,7 +64,22 @@ public class UsuarioController {
 	
 	@GET
 	@Path("/todos")
-	public List<Usuario> consultarTodas(){
+	public List<Usuario> consultarTodas() throws AlugueisException{
+		String idSessaoNoHeader = request.getHeader(AuthFilter.CHAVE_ID_SESSAO);
+		if(idSessaoNoHeader == null || idSessaoNoHeader.isEmpty()) {
+			throw new AlugueisException("Usuário sem permissão (idSessao não informado)");
+		}
+		
+		Usuario usuarioAutenticado = this.usuarioService.consultarPorIdSessao(idSessaoNoHeader);
+		
+		if(usuarioAutenticado == null) {
+			throw new AlugueisException("Usuário não encontrado");
+		}
+		
+		if(!usuarioAutenticado.isAdministrador()) {
+			throw new AlugueisException("Usuário sem permissão de acesso");
+		}
+		
 		return usuarioService.consultarTodos();
 	}
 

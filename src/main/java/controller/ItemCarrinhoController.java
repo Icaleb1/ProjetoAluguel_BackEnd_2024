@@ -29,7 +29,7 @@ public class ItemCarrinhoController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ItemCarrinho adicionarAoCarrinho(ItemCarrinho itemCarrinho)  {
+	public ItemCarrinho adicionarAoCarrinho(ItemCarrinho itemCarrinho) throws AlugueisException  {
 		return itemCarrinhoService.adicionarItem(itemCarrinho);
 	}
 	
